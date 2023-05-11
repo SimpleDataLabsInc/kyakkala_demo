@@ -1,0 +1,49 @@
+name: kk_demo
+description: ''
+version: 0.0.1
+author: kyakkala@prophecy.io
+language: python
+buildSystem: ''
+buildSystemDetails:
+  artefactID: kk_demo
+  parentArtefactID: kyakkalaprophecy.io_team
+  buildSystem: wheel
+  author: null
+  createdAt: '2023-05-11 09:10:37'
+  modifiedAt: '2023-05-11 09:10:37'
+pipelines:
+  pipelines/revenue_pipeline:
+    name: revenue_pipeline
+    description: ''
+    author: kyakkala@prophecy.io
+    mode: batch
+    artefactID: ''
+    language: python
+    createdAt: '2023-05-11 09:10:37'
+    modifiedAt: '2023-05-11 09:11:04'
+    datasets:
+      inputs: []
+      outputs: []
+    subgraphs: []
+    dependencies: {}
+datasets: {}
+templates: {}
+jobs: {}
+functions:
+  author: null
+  createdAt: '2023-05-11 09:10:37'
+  modifiedAt: '2023-05-11 09:10:37'
+  gems: {}
+  udfs: {}
+  udafs: {}
+  expressions: {}
+subgraphs: {}
+sqlModels: {}
+sqlMacros: {}
+sqlSeeds: {}
+sqlSources: {}
+sqlUnreferencedSources: {}
+sqlPipeline: null
+dependencies: []
+projectDependencies: {}
+pipelineConfigurations: {}
