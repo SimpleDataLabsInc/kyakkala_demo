@@ -7,7 +7,11 @@ from prophecy.utils import *
 from revenue_pipeline.graph import *
 
 def pipeline(spark: SparkSession) -> None:
-    pass
+    df_orders = orders(spark)
+    df_customer = customer(spark)
+    df_Join_1 = Join_1(spark, df_customer, df_orders)
+    df_Aggregate_1 = Aggregate_1(spark, df_Join_1)
+    customer_order(spark, df_Aggregate_1)
 
 def main():
     spark = SparkSession.builder\

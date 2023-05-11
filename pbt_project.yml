@@ -20,15 +20,88 @@ pipelines:
     artefactID: ''
     language: python
     createdAt: '2023-05-11 09:10:37'
-    modifiedAt: '2023-05-11 09:11:04'
+    modifiedAt: '2023-05-11 13:46:00'
     datasets:
-      inputs: []
-      outputs: []
+      inputs:
+      - datasets/customer
+      - datasets/orders
+      outputs:
+      - datasets/customer_order
     subgraphs: []
     dependencies: {}
-datasets: {}
+datasets:
+  datasets/orders:
+    name: orders
+    description: ''
+    author: kyakkala@prophecy.io
+    createdAt: '2023-05-11 13:33:11'
+    modifiedAt: '2023-05-11 13:33:11'
+    mode: batch
+    physicalDatasets:
+      demos:
+        fabricId: 1174
+        datasetType: File
+        description: ''
+        author: kyakkala@prophecy.io
+        createdAt: '2023-05-11 13:33:11'
+        modifiedAt: '2023-05-11 13:33:11'
+  datasets/customer:
+    name: customer
+    description: ''
+    author: kyakkala@prophecy.io
+    createdAt: '2023-05-11 13:40:10'
+    modifiedAt: '2023-05-11 13:40:10'
+    mode: batch
+    physicalDatasets:
+      demos:
+        fabricId: 1174
+        datasetType: File
+        description: ''
+        author: kyakkala@prophecy.io
+        createdAt: '2023-05-11 13:40:10'
+        modifiedAt: '2023-05-11 13:40:10'
+  datasets/customer_order:
+    name: customer_order
+    description: ''
+    author: kyakkala@prophecy.io
+    createdAt: '2023-05-11 13:45:59'
+    modifiedAt: '2023-05-11 13:45:59'
+    mode: batch
+    physicalDatasets:
+      demos:
+        fabricId: 1174
+        datasetType: File
+        description: ''
+        author: kyakkala@prophecy.io
+        createdAt: '2023-05-11 13:45:59'
+        modifiedAt: '2023-05-11 13:45:59'
 templates: {}
-jobs: {}
+jobs:
+  jobs/customer_order:
+    name: customer_order
+    description: ''
+    fabricUID: 1174
+    scheduler:
+      Databricks: {}
+    cloudProvider: null
+    jobSize: small
+    scheduleCron: 0 0 1 * * ? *
+    timeout: null
+    alerting:
+      emails: kyakkala@prophecy.io
+      onStart: false
+      onSuccess: true
+      onFailure: true
+    pipelines:
+    - pipelines/revenue_pipeline
+    jobClusterMode:
+      clusterMode:
+        Single: {}
+      clusterId: null
+    enabled: true
+    createdAt: '2023-05-11 13:46:45'
+    modifiedAt: '2023-05-11 13:47:02'
+    author: kyakkala@prophecy.io
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
