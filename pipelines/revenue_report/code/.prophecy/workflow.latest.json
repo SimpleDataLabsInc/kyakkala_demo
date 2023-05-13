@@ -2,7 +2,7 @@
   "metainfo" : {
     "id" : "1",
     "language" : "python",
-    "fabricId" : "1",
+    "fabricId" : "1174",
     "frontEndLanguage" : "sql",
     "mode" : "batch",
     "udfs" : {
@@ -222,9 +222,9 @@
         "isCustomOutputSchema" : false
       },
       "properties" : {
+        "packageName" : "report.customer.revenue",
         "externalId" : "subgraphs/revenue_enrich",
-        "name" : "revenue_enrich",
-        "packageName" : "report.customer.revenue"
+        "name" : "revenue_enrich"
       },
       "connections" : [ {
         "id" : "5CDcrrKKhuK92jxFoFtEG$$iVyUC3vrHgDIpKMP7bhSF",
