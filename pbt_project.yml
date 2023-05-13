@@ -12,96 +12,72 @@ buildSystemDetails:
   createdAt: '2023-05-11 09:10:37'
   modifiedAt: '2023-05-11 09:10:37'
 pipelines:
-  pipelines/revenue_pipeline:
-    name: revenue_pipeline
+  pipelines/revenue_report:
+    name: revenue_report
     description: ''
     author: kyakkala@prophecy.io
     mode: batch
     artefactID: ''
     language: python
-    createdAt: '2023-05-11 09:10:37'
-    modifiedAt: '2023-05-11 13:46:00'
+    createdAt: '2023-05-13 12:14:06'
+    modifiedAt: '2023-05-13 12:25:45'
     datasets:
       inputs:
-      - datasets/customer
-      - datasets/orders
+      - datasets/customer_ds
+      - datasets/orders_ds
       outputs:
-      - datasets/customer_order
-    subgraphs: []
+      - datasets/customer_revenue
+    subgraphs:
+    - subgraphs/revenue_enrich
     dependencies: {}
 datasets:
-  datasets/orders:
-    name: orders
+  datasets/customer_ds:
+    name: customer_ds
     description: ''
     author: kyakkala@prophecy.io
-    createdAt: '2023-05-11 13:33:11'
-    modifiedAt: '2023-05-11 13:33:11'
+    createdAt: '2023-05-13 12:15:28'
+    modifiedAt: '2023-05-13 12:17:02'
     mode: batch
     physicalDatasets:
-      demos:
-        fabricId: 1174
+      dev:
+        fabricId: 1
         datasetType: File
         description: ''
         author: kyakkala@prophecy.io
-        createdAt: '2023-05-11 13:33:11'
-        modifiedAt: '2023-05-11 13:33:11'
-  datasets/customer:
-    name: customer
+        createdAt: '2023-05-13 12:15:28'
+        modifiedAt: '2023-05-13 12:15:28'
+  datasets/orders_ds:
+    name: orders_ds
     description: ''
     author: kyakkala@prophecy.io
-    createdAt: '2023-05-11 13:40:10'
-    modifiedAt: '2023-05-11 13:40:10'
+    createdAt: '2023-05-13 12:16:05'
+    modifiedAt: '2023-05-13 12:17:26'
     mode: batch
     physicalDatasets:
-      demos:
-        fabricId: 1174
+      dev:
+        fabricId: 1
         datasetType: File
         description: ''
         author: kyakkala@prophecy.io
-        createdAt: '2023-05-11 13:40:10'
-        modifiedAt: '2023-05-11 13:40:10'
-  datasets/customer_order:
-    name: customer_order
+        createdAt: '2023-05-13 12:16:05'
+        modifiedAt: '2023-05-13 12:16:05'
+  datasets/customer_revenue:
+    name: customer_revenue
     description: ''
     author: kyakkala@prophecy.io
-    createdAt: '2023-05-11 13:45:59'
-    modifiedAt: '2023-05-11 13:45:59'
+    createdAt: '2023-05-13 12:25:44'
+    modifiedAt: '2023-05-13 12:25:44'
     mode: batch
     physicalDatasets:
-      demos:
-        fabricId: 1174
+      dev:
+        fabricId: 1
         datasetType: File
         description: ''
         author: kyakkala@prophecy.io
-        createdAt: '2023-05-11 13:45:59'
-        modifiedAt: '2023-05-11 13:45:59'
+        createdAt: '2023-05-13 12:25:44'
+        modifiedAt: '2023-05-13 12:25:44'
 templates: {}
-jobs:
-  jobs/customer_order:
-    name: customer_order
-    description: ''
-    fabricUID: 1174
-    scheduler:
-      Databricks: {}
-    cloudProvider: null
-    jobSize: small
-    scheduleCron: 0 0 1 * * ? *
-    timeout: null
-    alerting:
-      emails: kyakkala@prophecy.io
-      onStart: false
-      onSuccess: true
-      onFailure: true
-    pipelines:
-    - pipelines/revenue_pipeline
-    jobClusterMode:
-      clusterMode:
-        Single: {}
-      clusterId: null
-    enabled: true
-    createdAt: '2023-05-11 13:46:45'
-    modifiedAt: '2023-05-11 13:47:02'
-    author: kyakkala@prophecy.io
+jobs: {}
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
@@ -110,7 +86,16 @@ functions:
   udfs: {}
   udafs: {}
   expressions: {}
-subgraphs: {}
+subgraphs:
+  subgraphs/revenue_enrich:
+    name: revenue_enrich
+    description: ''
+    author: kyakkala@prophecy.io
+    language: python
+    artefactID: ''
+    mode: batch
+    createdAt: '2023-05-13 12:24:43'
+    modifiedAt: '2023-05-13 12:24:44'
 sqlModels: {}
 sqlMacros: {}
 sqlSeeds: {}
