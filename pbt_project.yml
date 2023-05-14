@@ -20,7 +20,7 @@ pipelines:
     artefactID: ''
     language: python
     createdAt: '2023-05-14 04:25:42'
-    modifiedAt: '2023-05-14 05:18:04'
+    modifiedAt: '2023-05-14 06:15:06'
     datasets:
       inputs:
       - datasets/customer_ds
@@ -66,7 +66,7 @@ datasets:
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:25:44'
-    modifiedAt: '2023-05-14 05:10:31'
+    modifiedAt: '2023-05-14 06:14:32'
     mode: batch
     physicalDatasets:
       dev:
@@ -77,22 +77,38 @@ datasets:
         createdAt: '2023-05-13 12:25:44'
         modifiedAt: '2023-05-13 12:25:44'
 templates: {}
-jobs: {}
+jobs:
+  jobs/customer_life_revenue_job:
+    name: customer_life_revenue_job
+    description: ''
+    fabricUID: 647
+    scheduler:
+      Databricks: {}
+    cloudProvider: null
+    jobSize: Small
+    scheduleCron: 0 0 0 1 * ? *
+    timeout: null
+    alerting:
+      emails: kyakkala@prophecy.io
+      onStart: false
+      onSuccess: true
+      onFailure: true
+    pipelines:
+    - pipelines/standard_pipeline
+    jobClusterMode:
+      clusterMode:
+        Single: {}
+      clusterId: null
+    enabled: true
+    createdAt: '2023-05-14 06:15:42'
+    modifiedAt: '2023-05-14 06:15:49'
+    author: kyakkala@prophecy.io
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
-  modifiedAt: '2023-05-14 05:18:04'
+  modifiedAt: '2023-05-14 06:14:32'
   gems: {}
-  udfs:
-    udfs/kk_square:
-      name: kk_square
-      description: ''
-      tags: []
-      inputs: []
-      outputs: []
-      author: kyakkala@prophecy.io
-      createdAt: '2022-12-15 18:04:50'
-      modifiedAt: '2022-12-15 18:04:50'
+  udfs: {}
   udafs: {}
   expressions: {}
 subgraphs:
@@ -104,7 +120,7 @@ subgraphs:
     artefactID: ''
     mode: batch
     createdAt: '2023-05-13 12:24:43'
-    modifiedAt: '2023-05-14 05:18:04'
+    modifiedAt: '2023-05-14 06:14:03'
 sqlModels: {}
 sqlMacros: {}
 sqlSeeds: {}

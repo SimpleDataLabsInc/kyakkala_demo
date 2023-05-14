@@ -16,7 +16,7 @@ schema:
       description: ''
       mappings: []
       tags: []
-  - name: total_expenditure
+  - name: total_amount
     type: string
     nullable: true
     metadata:

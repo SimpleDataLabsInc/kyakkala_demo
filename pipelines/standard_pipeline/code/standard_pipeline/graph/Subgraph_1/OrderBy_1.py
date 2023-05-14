@@ -6,4 +6,4 @@ from .config import *
 from standard_pipeline.udfs.UDFs import *
 
 def OrderBy_1(spark: SparkSession, in0: DataFrame) -> DataFrame:
-    return in0.orderBy(col("date_of_join").desc())
+    return in0.orderBy(col("total_amount").desc())

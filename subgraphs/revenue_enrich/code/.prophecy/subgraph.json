@@ -22,10 +22,6 @@
       "id" : "HvfoTgG8_y8mYD6ymC03h",
       "slug" : "in0",
       "isStreaming" : false
-    }, {
-      "id" : "ocIYCcmNeGMRmT1Ju99Eq",
-      "slug" : "in1",
-      "isStreaming" : false
     } ],
     "outputs" : [ {
       "id" : "BVUjWvQLTEiQSE9pGtu-7",
@@ -39,147 +35,38 @@
     "packageName" : "report.customer.revenue"
   },
   "connections" : [ {
-    "id" : "q_qbfeD_oDnLEVn0Y1hY0",
-    "source" : "eqweDPuOo-d4RvOTJ7tsR",
-    "sourcePort" : "6gqnd6bQ5-JEQdEeAvfqk",
+    "id" : "M8fJWculjFo58x9cz96Nv",
+    "source" : "dZmjuvKGZu_v1XtzLcucz",
+    "sourcePort" : "HvfoTgG8_y8mYD6ymC03h",
     "target" : "j-DSd8q4j_GylKQAhP7gP",
     "targetPort" : "pnTi7Xpvl5KWR5LJ7hPlT"
   }, {
-    "id" : "Mo_3UW4B0XQNAJpY_bIBU",
+    "id" : "JrqfvzJEV0AHghQLffW56",
     "source" : "j-DSd8q4j_GylKQAhP7gP",
     "sourcePort" : "IyqA_72WlU1D8SYctNfAQ",
-    "target" : "UhcokrzrWn6rNQoNTjE7-",
-    "targetPort" : "_2Aa0We62XzKnA2ELmNfO"
-  }, {
-    "id" : "LZ4PJ8rxKyUomLswwzFsZ",
-    "source" : "UhcokrzrWn6rNQoNTjE7-",
-    "sourcePort" : "82Hn6S343Rmkm42Rmf_eZ",
     "target" : "2G0Omr89WTvQLYjm75020",
     "targetPort" : "EY19cVXlkHuoWCagLvS3k"
   }, {
-    "id" : "gNJoXO4RtTd6sRVATPrnE",
+    "id" : "UlTe68A7DH5qRlN5bkbox$$p6j1E_bYFz9laLt33NCXw",
     "source" : "2G0Omr89WTvQLYjm75020",
     "sourcePort" : "dIUPhFCY6yA9aQZkzf436",
+    "target" : "UhcokrzrWn6rNQoNTjE7-",
+    "targetPort" : "_2Aa0We62XzKnA2ELmNfO"
+  }, {
+    "id" : "Dl59MGa_akA5sJwJqB36B",
+    "source" : "UhcokrzrWn6rNQoNTjE7-",
+    "sourcePort" : "82Hn6S343Rmkm42Rmf_eZ",
     "target" : "dZmjuvKGZu_v1XtzLcucz",
     "targetPort" : "BVUjWvQLTEiQSE9pGtu-7"
-  }, {
-    "id" : "YVevHBXAWZV-wPioHs5nM",
-    "source" : "dZmjuvKGZu_v1XtzLcucz",
-    "sourcePort" : "HvfoTgG8_y8mYD6ymC03h",
-    "target" : "eqweDPuOo-d4RvOTJ7tsR",
-    "targetPort" : "LogNpDJW47USetETdww7g"
-  }, {
-    "id" : "-eOGjdv67fU01WtiMKz7p",
-    "source" : "dZmjuvKGZu_v1XtzLcucz",
-    "sourcePort" : "ocIYCcmNeGMRmT1Ju99Eq",
-    "target" : "eqweDPuOo-d4RvOTJ7tsR",
-    "targetPort" : "W3tdzU9kYX1HIDPI5TfU-"
   } ],
   "processes" : {
-    "eqweDPuOo-d4RvOTJ7tsR" : {
-      "id" : "eqweDPuOo-d4RvOTJ7tsR",
-      "component" : "Join",
-      "metadata" : {
-        "label" : "Join_2",
-        "slug" : "Join_2",
-        "x" : 240,
-        "y" : 120,
-        "phase" : 0,
-        "cache" : false,
-        "detailedStats" : false,
-        "isImported" : false
-      },
-      "ports" : {
-        "inputs" : [ {
-          "id" : "LogNpDJW47USetETdww7g",
-          "slug" : "in0"
-        }, {
-          "id" : "W3tdzU9kYX1HIDPI5TfU-",
-          "slug" : "in1"
-        } ],
-        "outputs" : [ {
-          "id" : "6gqnd6bQ5-JEQdEeAvfqk",
-          "slug" : "out"
-        } ],
-        "selectedInputFields" : [ ],
-        "isCustomOutputSchema" : false
-      },
-      "properties" : {
-        "conditions" : [ {
-          "alias" : "in1",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.customer_id = in1.customer_id"
-          },
-          "joinType" : "inner"
-        } ],
-        "expressions" : [ {
-          "target" : "customer_id",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.customer_id"
-          },
-          "description" : "",
-          "_row_id" : null
-        }, {
-          "target" : "account_open_date",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.account_open_date"
-          },
-          "description" : "",
-          "_row_id" : null
-        }, {
-          "target" : "first_name",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.first_name"
-          },
-          "description" : "",
-          "_row_id" : null
-        }, {
-          "target" : "last_name",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.last_name"
-          },
-          "description" : "",
-          "_row_id" : null
-        }, {
-          "target" : "amount",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in1.amount"
-          },
-          "description" : "",
-          "_row_id" : null
-        } ],
-        "hints" : [ {
-          "id" : "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI",
-          "alias" : "in0",
-          "hintType" : "none",
-          "propagateColumns" : false
-        }, {
-          "id" : "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4",
-          "alias" : "in1",
-          "hintType" : "none",
-          "propagateColumns" : false
-        } ],
-        "allIn1" : null,
-        "activeTab" : "expressions",
-        "columnsSelector" : [ "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4##customer_id", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##customer_id", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##first_name", "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4##amount", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##last_name", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##account_open_date", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##customer_id" ],
-        "allIn0" : null,
-        "whereClause" : null,
-        "headAlias" : "in0"
-      }
-    },
     "j-DSd8q4j_GylKQAhP7gP" : {
       "id" : "j-DSd8q4j_GylKQAhP7gP",
       "component" : "Reformat",
       "metadata" : {
         "label" : "Reformat_1",
         "slug" : "Reformat_1",
-        "x" : 440,
+        "x" : 240,
         "y" : 120,
         "phase" : 0,
         "cache" : false,
@@ -217,7 +104,7 @@
           "description" : "",
           "_row_id" : "9093595281249527906"
         }, {
-          "target" : "total_expenditure",
+          "target" : "total_amount",
           "expression" : {
             "format" : "sql",
             "expression" : "concat(format_number(amount, 2), ' $')"
@@ -264,11 +151,11 @@
         "isCustomOutputSchema" : false
       },
       "properties" : {
-        "columnsSelector" : [ "_2Aa0We62XzKnA2ELmNfO$$4SkvL5KnyAPajLRACrfT3##date_of_join" ],
+        "columnsSelector" : [ ],
         "orders" : [ {
           "expression" : {
             "format" : "sql",
-            "expression" : "date_of_join"
+            "expression" : "total_amount"
           },
           "sortType" : "desc"
         } ]
@@ -280,7 +167,7 @@
       "metadata" : {
         "label" : "Repartition_1",
         "slug" : "Repartition_1",
-        "x" : 840,
+        "x" : 440,
         "y" : 120,
         "phase" : 0,
         "cache" : false,

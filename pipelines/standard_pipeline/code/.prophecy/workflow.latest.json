@@ -56,41 +56,35 @@
     "configurationVersion" : "v1"
   },
   "connections" : [ {
-    "id" : "s9CEXu2kxs8Xwk9GpYen8",
-    "source" : "ijVVGrHkKSh8gpEwBUxR-$$_H21XlU5cokpsgETLxNcT",
-    "sourcePort" : "p7BehOLOqUkLAEnuA7P1U$$QYnwiQZGYlK9XMz-b7ftr",
-    "target" : "AYBsuOr-OBinar5cS7omV$$EnDpe6OTgo3C9QXlfAKx-",
-    "targetPort" : "wmhhbUYY2f8cWrvGIQHBJ$$HDFgqAAGMhsdSylnQs5hg"
-  }, {
-    "id" : "YtUdNimrftNV_C1zuni9W",
-    "source" : "vMBPVI10tgDNqC3YeCnMg$$u4Xf96yjsXiviYY2wKPSn",
-    "sourcePort" : "pSbh5x4M6eY0d8FaY3Q-_$$7v15xliwgzvYxmG8vC8Tj",
-    "target" : "AYBsuOr-OBinar5cS7omV$$EnDpe6OTgo3C9QXlfAKx-",
-    "targetPort" : "IGp5t83-L9XW3IPwEZI_Y$$oYhR8mceDB9EkXT4A7-NO"
-  }, {
-    "id" : "R-iUXWDGjFuu8oG9F6hMK",
-    "source" : "AYBsuOr-OBinar5cS7omV$$EnDpe6OTgo3C9QXlfAKx-",
-    "sourcePort" : "g0nGd86uCZ8D9TqXVx3XJ$$0x-077l96c_sqeh7L5LFH",
-    "target" : "xMzUqXcX8uDqW8LbNC68I$$TrdygwD3gZrZx1g--qIQP",
-    "targetPort" : "2HGEY_eT1gcFmOUCV4FPU$$ZOb0GG4dNSsEFxZiJmGev"
-  }, {
     "id" : "IIR-9sWuk6WeiyA7kEkjq",
     "source" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
     "sourcePort" : "BVUjWvQLTEiQSE9pGtu-7$$iPJCmYRKcpPU207ODMeoR",
     "target" : "l4ApB69EP00lX-4_t4K_I$$OftF-sp3aOqHWSHIjebrc",
     "targetPort" : "DLn1WMXY4vEDkPcV7QhcN$$8isM8BSDHPbqY98brPFPr"
   }, {
-    "id" : "D-xtE0KKgBkv-1ZVNzElO",
-    "source" : "xMzUqXcX8uDqW8LbNC68I$$TrdygwD3gZrZx1g--qIQP",
-    "sourcePort" : "4cy0sH7ph7ZMOgKZdvwv6$$FWJOr_y94covJUioxbUed",
-    "target" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
-    "targetPort" : "ocIYCcmNeGMRmT1Ju99Eq$$R5ktnAPKN4WsLrAakiJcr"
+    "id" : "Mtl33qyojLI47e0dpp8j2$$zUnkQ34KHEAst3uahY9Bw",
+    "source" : "vMBPVI10tgDNqC3YeCnMg$$u4Xf96yjsXiviYY2wKPSn",
+    "sourcePort" : "pSbh5x4M6eY0d8FaY3Q-_$$7v15xliwgzvYxmG8vC8Tj",
+    "target" : "xMzUqXcX8uDqW8LbNC68I$$TrdygwD3gZrZx1g--qIQP",
+    "targetPort" : "2HGEY_eT1gcFmOUCV4FPU$$ZOb0GG4dNSsEFxZiJmGev"
   }, {
-    "id" : "w-gQczZ6zgRFWiqGeE8eF",
+    "id" : "mPRWG6IIo79DRKC8aDpb0$$dNgXG21UGkDLOXYV8mbEk",
     "source" : "ijVVGrHkKSh8gpEwBUxR-$$_H21XlU5cokpsgETLxNcT",
     "sourcePort" : "p7BehOLOqUkLAEnuA7P1U$$QYnwiQZGYlK9XMz-b7ftr",
+    "target" : "ORlt7NN9uDo0D5ubFGczF$$3qqiimKNNdqYR2Ufcs7CU",
+    "targetPort" : "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4"
+  }, {
+    "id" : "9RJs5zRX2e-t6DQ538vv0$$tTIvSYDJc_WufDn5SvF3e",
+    "source" : "ORlt7NN9uDo0D5ubFGczF$$3qqiimKNNdqYR2Ufcs7CU",
+    "sourcePort" : "8swaBB4gViIyg9eF-t8BH$$laJ_gZ0-xvlQkAU_8s6NH",
     "target" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
     "targetPort" : "HvfoTgG8_y8mYD6ymC03h$$bn69EeVgcj15aPahzBjuo"
+  }, {
+    "id" : "ZUY-8rgjqawPhiJT5W3mT",
+    "source" : "xMzUqXcX8uDqW8LbNC68I$$TrdygwD3gZrZx1g--qIQP",
+    "sourcePort" : "4cy0sH7ph7ZMOgKZdvwv6$$FWJOr_y94covJUioxbUed",
+    "target" : "ORlt7NN9uDo0D5ubFGczF$$3qqiimKNNdqYR2Ufcs7CU",
+    "targetPort" : "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ"
   } ],
   "processes" : {
     "l4ApB69EP00lX-4_t4K_I$$OftF-sp3aOqHWSHIjebrc" : {
@@ -99,8 +93,8 @@
       "metadata" : {
         "label" : "customer_revenue",
         "slug" : "customer_revenue",
-        "x" : 1060,
-        "y" : 200,
+        "x" : 920,
+        "y" : 220,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -131,7 +125,7 @@
                 "tags" : [ ]
               }
             }, {
-              "name" : "total_expenditure",
+              "name" : "total_amount",
               "type" : "string",
               "nullable" : true,
               "metadata" : {
@@ -160,231 +154,14 @@
         "datasetId" : "datasets/customer_revenue"
       }
     },
-    "AYBsuOr-OBinar5cS7omV$$EnDpe6OTgo3C9QXlfAKx-" : {
-      "id" : "AYBsuOr-OBinar5cS7omV$$EnDpe6OTgo3C9QXlfAKx-",
-      "component" : "Join",
-      "metadata" : {
-        "label" : "Join_1",
-        "slug" : "Join_1",
-        "x" : 500,
-        "y" : 380,
-        "phase" : 0,
-        "cache" : false,
-        "detailedStats" : false,
-        "isImported" : false
-      },
-      "ports" : {
-        "inputs" : [ {
-          "id" : "wmhhbUYY2f8cWrvGIQHBJ$$HDFgqAAGMhsdSylnQs5hg",
-          "slug" : "in0",
-          "schema" : {
-            "type" : "struct",
-            "fields" : [ {
-              "name" : "customer_id",
-              "type" : "integer",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "first_name",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "last_name",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "phone",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "email",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "country_code",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "account_open_date",
-              "type" : "date",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "account_flags",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            } ]
-          },
-          "isStreaming" : false
-        }, {
-          "id" : "IGp5t83-L9XW3IPwEZI_Y$$oYhR8mceDB9EkXT4A7-NO",
-          "slug" : "in1",
-          "schema" : {
-            "type" : "struct",
-            "fields" : [ {
-              "name" : "order_id",
-              "type" : "integer",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "customer_id",
-              "type" : "integer",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "order_status",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "order_category",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "order_date",
-              "type" : "date",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "amount",
-              "type" : "double",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            } ]
-          },
-          "isStreaming" : false
-        } ],
-        "outputs" : [ {
-          "id" : "g0nGd86uCZ8D9TqXVx3XJ$$0x-077l96c_sqeh7L5LFH",
-          "slug" : "out"
-        } ],
-        "selectedInputFields" : [ ],
-        "isCustomOutputSchema" : false
-      },
-      "properties" : {
-        "conditions" : [ {
-          "alias" : "in1",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.customer_id = in1.customer_id"
-          },
-          "joinType" : "inner"
-        } ],
-        "expressions" : [ {
-          "target" : "customer_id",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in0.customer_id"
-          },
-          "description" : "",
-          "_row_id" : null
-        }, {
-          "target" : "amount",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "in1.amount"
-          },
-          "description" : "",
-          "_row_id" : null
-        }, {
-          "target" : "s_amount",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "kk_square(amount)"
-          },
-          "description" : "",
-          "_row_id" : ""
-        } ],
-        "hints" : [ {
-          "id" : "wmhhbUYY2f8cWrvGIQHBJ$$HDFgqAAGMhsdSylnQs5hg",
-          "alias" : "in0",
-          "hintType" : "none",
-          "propagateColumns" : false
-        }, {
-          "id" : "IGp5t83-L9XW3IPwEZI_Y$$oYhR8mceDB9EkXT4A7-NO",
-          "alias" : "in1",
-          "hintType" : "none",
-          "propagateColumns" : false
-        } ],
-        "allIn1" : null,
-        "activeTab" : "expressions",
-        "columnsSelector" : [ "IGp5t83-L9XW3IPwEZI_Y$$oYhR8mceDB9EkXT4A7-NO##customer_id", "wmhhbUYY2f8cWrvGIQHBJ$$HDFgqAAGMhsdSylnQs5hg##customer_id", "wmhhbUYY2f8cWrvGIQHBJ$$HDFgqAAGMhsdSylnQs5hg##customer_id", "IGp5t83-L9XW3IPwEZI_Y$$oYhR8mceDB9EkXT4A7-NO##amount" ],
-        "allIn0" : null,
-        "whereClause" : null,
-        "headAlias" : "in0"
-      }
-    },
     "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK" : {
       "id" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
       "component" : "Subgraph",
       "metadata" : {
         "label" : "Subgraph_1",
         "slug" : "Subgraph_1",
-        "x" : 840,
-        "y" : 200,
+        "x" : 720,
+        "y" : 220,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -424,61 +201,8 @@
                 "tags" : [ ]
               }
             }, {
-              "name" : "phone",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "email",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "country_code",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
               "name" : "account_open_date",
               "type" : "date",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            }, {
-              "name" : "account_flags",
-              "type" : "string",
-              "nullable" : true,
-              "metadata" : {
-                "description" : "",
-                "mappings" : [ ],
-                "tags" : [ ]
-              }
-            } ]
-          },
-          "isStreaming" : false
-        }, {
-          "id" : "ocIYCcmNeGMRmT1Ju99Eq$$R5ktnAPKN4WsLrAakiJcr",
-          "slug" : "in1",
-          "schema" : {
-            "type" : "struct",
-            "fields" : [ {
-              "name" : "customer_id",
-              "type" : "integer",
               "nullable" : true,
               "metadata" : {
                 "description" : "",
@@ -511,247 +235,38 @@
         "name" : "revenue_enrich"
       },
       "connections" : [ {
-        "id" : "q_qbfeD_oDnLEVn0Y1hY0",
-        "source" : "eqweDPuOo-d4RvOTJ7tsR$$JXj9nxIKIwxtWp--_K8Uh",
-        "sourcePort" : "6gqnd6bQ5-JEQdEeAvfqk$$X_53-V3jWrHh_0zabjBaY",
+        "id" : "M8fJWculjFo58x9cz96Nv",
+        "source" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
+        "sourcePort" : "HvfoTgG8_y8mYD6ymC03h$$bn69EeVgcj15aPahzBjuo",
         "target" : "j-DSd8q4j_GylKQAhP7gP$$SWibxjCg2GwiN2WZFNtQ8",
         "targetPort" : "pnTi7Xpvl5KWR5LJ7hPlT$$lz6rqDGRYSGLG8lYiHKsI"
       }, {
-        "id" : "Mo_3UW4B0XQNAJpY_bIBU",
+        "id" : "JrqfvzJEV0AHghQLffW56",
         "source" : "j-DSd8q4j_GylKQAhP7gP$$SWibxjCg2GwiN2WZFNtQ8",
         "sourcePort" : "IyqA_72WlU1D8SYctNfAQ$$8mXAU2ptJKfLH3ZO7Z2LJ",
-        "target" : "UhcokrzrWn6rNQoNTjE7-$$aIt7AaAGDzcH2a6VvJJLA",
-        "targetPort" : "_2Aa0We62XzKnA2ELmNfO$$4SkvL5KnyAPajLRACrfT3"
-      }, {
-        "id" : "LZ4PJ8rxKyUomLswwzFsZ",
-        "source" : "UhcokrzrWn6rNQoNTjE7-$$aIt7AaAGDzcH2a6VvJJLA",
-        "sourcePort" : "82Hn6S343Rmkm42Rmf_eZ$$9NvfMTe2kjVh3i7Y2f-hI",
         "target" : "2G0Omr89WTvQLYjm75020$$83HeiXfMKa3spZvs-UeaJ",
         "targetPort" : "EY19cVXlkHuoWCagLvS3k$$5mDmrLB99Eh1u5fA7khmR"
       }, {
-        "id" : "gNJoXO4RtTd6sRVATPrnE",
+        "id" : "UlTe68A7DH5qRlN5bkbox$$p6j1E_bYFz9laLt33NCXw",
         "source" : "2G0Omr89WTvQLYjm75020$$83HeiXfMKa3spZvs-UeaJ",
         "sourcePort" : "dIUPhFCY6yA9aQZkzf436$$kBFSmB_rJ5FwIdWY_Dz8b",
+        "target" : "UhcokrzrWn6rNQoNTjE7-$$aIt7AaAGDzcH2a6VvJJLA",
+        "targetPort" : "_2Aa0We62XzKnA2ELmNfO$$4SkvL5KnyAPajLRACrfT3"
+      }, {
+        "id" : "Dl59MGa_akA5sJwJqB36B",
+        "source" : "UhcokrzrWn6rNQoNTjE7-$$aIt7AaAGDzcH2a6VvJJLA",
+        "sourcePort" : "82Hn6S343Rmkm42Rmf_eZ$$9NvfMTe2kjVh3i7Y2f-hI",
         "target" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
         "targetPort" : "BVUjWvQLTEiQSE9pGtu-7$$iPJCmYRKcpPU207ODMeoR"
-      }, {
-        "id" : "YVevHBXAWZV-wPioHs5nM",
-        "source" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
-        "sourcePort" : "HvfoTgG8_y8mYD6ymC03h$$bn69EeVgcj15aPahzBjuo",
-        "target" : "eqweDPuOo-d4RvOTJ7tsR$$JXj9nxIKIwxtWp--_K8Uh",
-        "targetPort" : "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI"
-      }, {
-        "id" : "-eOGjdv67fU01WtiMKz7p",
-        "source" : "dZmjuvKGZu_v1XtzLcucz$$8hvX-W_GuDsH8F9xyzOeK",
-        "sourcePort" : "ocIYCcmNeGMRmT1Ju99Eq$$R5ktnAPKN4WsLrAakiJcr",
-        "target" : "eqweDPuOo-d4RvOTJ7tsR$$JXj9nxIKIwxtWp--_K8Uh",
-        "targetPort" : "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4"
       } ],
       "processes" : {
-        "eqweDPuOo-d4RvOTJ7tsR$$JXj9nxIKIwxtWp--_K8Uh" : {
-          "id" : "eqweDPuOo-d4RvOTJ7tsR$$JXj9nxIKIwxtWp--_K8Uh",
-          "component" : "Join",
-          "metadata" : {
-            "label" : "Join_2",
-            "slug" : "Join_2",
-            "x" : 240,
-            "y" : 120,
-            "phase" : 0,
-            "cache" : false,
-            "detailedStats" : false,
-            "isImported" : false
-          },
-          "ports" : {
-            "inputs" : [ {
-              "id" : "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI",
-              "slug" : "in0",
-              "schema" : {
-                "type" : "struct",
-                "fields" : [ {
-                  "name" : "customer_id",
-                  "type" : "integer",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "first_name",
-                  "type" : "string",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "last_name",
-                  "type" : "string",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "phone",
-                  "type" : "string",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "email",
-                  "type" : "string",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "country_code",
-                  "type" : "string",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "account_open_date",
-                  "type" : "date",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "account_flags",
-                  "type" : "string",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                } ]
-              },
-              "isStreaming" : false
-            }, {
-              "id" : "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4",
-              "slug" : "in1",
-              "schema" : {
-                "type" : "struct",
-                "fields" : [ {
-                  "name" : "customer_id",
-                  "type" : "integer",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
-                  "name" : "amount",
-                  "type" : "double",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                } ]
-              },
-              "isStreaming" : false
-            } ],
-            "outputs" : [ {
-              "id" : "6gqnd6bQ5-JEQdEeAvfqk$$X_53-V3jWrHh_0zabjBaY",
-              "slug" : "out"
-            } ],
-            "selectedInputFields" : [ ],
-            "isCustomOutputSchema" : false
-          },
-          "properties" : {
-            "conditions" : [ {
-              "alias" : "in1",
-              "expression" : {
-                "format" : "sql",
-                "expression" : "in0.customer_id = in1.customer_id"
-              },
-              "joinType" : "inner"
-            } ],
-            "expressions" : [ {
-              "target" : "customer_id",
-              "expression" : {
-                "format" : "sql",
-                "expression" : "in0.customer_id"
-              },
-              "description" : "",
-              "_row_id" : null
-            }, {
-              "target" : "account_open_date",
-              "expression" : {
-                "format" : "sql",
-                "expression" : "in0.account_open_date"
-              },
-              "description" : "",
-              "_row_id" : null
-            }, {
-              "target" : "first_name",
-              "expression" : {
-                "format" : "sql",
-                "expression" : "in0.first_name"
-              },
-              "description" : "",
-              "_row_id" : null
-            }, {
-              "target" : "last_name",
-              "expression" : {
-                "format" : "sql",
-                "expression" : "in0.last_name"
-              },
-              "description" : "",
-              "_row_id" : null
-            }, {
-              "target" : "amount",
-              "expression" : {
-                "format" : "sql",
-                "expression" : "in1.amount"
-              },
-              "description" : "",
-              "_row_id" : null
-            } ],
-            "hints" : [ {
-              "id" : "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI",
-              "alias" : "in0",
-              "hintType" : "none",
-              "propagateColumns" : false
-            }, {
-              "id" : "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4",
-              "alias" : "in1",
-              "hintType" : "none",
-              "propagateColumns" : false
-            } ],
-            "allIn1" : null,
-            "activeTab" : "expressions",
-            "columnsSelector" : [ "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4##customer_id", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##customer_id", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##first_name", "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4##amount", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##last_name", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##account_open_date", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##customer_id" ],
-            "allIn0" : null,
-            "whereClause" : null,
-            "headAlias" : "in0"
-          }
-        },
         "j-DSd8q4j_GylKQAhP7gP$$SWibxjCg2GwiN2WZFNtQ8" : {
           "id" : "j-DSd8q4j_GylKQAhP7gP$$SWibxjCg2GwiN2WZFNtQ8",
           "component" : "Reformat",
           "metadata" : {
             "label" : "Reformat_1",
             "slug" : "Reformat_1",
-            "x" : 440,
+            "x" : 240,
             "y" : 120,
             "phase" : 0,
             "cache" : false,
@@ -774,15 +289,6 @@
                     "tags" : [ ]
                   }
                 }, {
-                  "name" : "account_open_date",
-                  "type" : "date",
-                  "nullable" : true,
-                  "metadata" : {
-                    "description" : "",
-                    "mappings" : [ ],
-                    "tags" : [ ]
-                  }
-                }, {
                   "name" : "first_name",
                   "type" : "string",
                   "nullable" : true,
@@ -794,6 +300,15 @@
                 }, {
                   "name" : "last_name",
                   "type" : "string",
+                  "nullable" : true,
+                  "metadata" : {
+                    "description" : "",
+                    "mappings" : [ ],
+                    "tags" : [ ]
+                  }
+                }, {
+                  "name" : "account_open_date",
+                  "type" : "date",
                   "nullable" : true,
                   "metadata" : {
                     "description" : "",
@@ -837,7 +352,7 @@
               },
               "description" : ""
             }, {
-              "target" : "total_expenditure",
+              "target" : "total_amount",
               "expression" : {
                 "format" : "sql",
                 "expression" : "concat(format_number(amount, 2), ' $')"
@@ -894,7 +409,7 @@
                     "tags" : [ ]
                   }
                 }, {
-                  "name" : "total_expenditure",
+                  "name" : "total_amount",
                   "type" : "string",
                   "nullable" : true,
                   "metadata" : {
@@ -923,11 +438,11 @@
             "isCustomOutputSchema" : false
           },
           "properties" : {
-            "columnsSelector" : [ "_2Aa0We62XzKnA2ELmNfO$$4SkvL5KnyAPajLRACrfT3##date_of_join" ],
+            "columnsSelector" : [ ],
             "orders" : [ {
               "expression" : {
                 "format" : "sql",
-                "expression" : "date_of_join"
+                "expression" : "total_amount"
               },
               "sortType" : "desc"
             } ]
@@ -939,7 +454,7 @@
           "metadata" : {
             "label" : "Repartition_1",
             "slug" : "Repartition_1",
-            "x" : 840,
+            "x" : 440,
             "y" : 120,
             "phase" : 0,
             "cache" : false,
@@ -971,7 +486,7 @@
                     "tags" : [ ]
                   }
                 }, {
-                  "name" : "total_expenditure",
+                  "name" : "total_amount",
                   "type" : "string",
                   "nullable" : true,
                   "metadata" : {
@@ -1012,14 +527,211 @@
       },
       "externalDependencies" : [ ]
     },
+    "ORlt7NN9uDo0D5ubFGczF$$3qqiimKNNdqYR2Ufcs7CU" : {
+      "id" : "ORlt7NN9uDo0D5ubFGczF$$3qqiimKNNdqYR2Ufcs7CU",
+      "component" : "Join",
+      "metadata" : {
+        "label" : "Join_1",
+        "slug" : "Join_1",
+        "x" : 520,
+        "y" : 220,
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false,
+        "isImported" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4",
+          "slug" : "in0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ {
+              "name" : "customer_id",
+              "type" : "integer",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "first_name",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "last_name",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "phone",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "email",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "country_code",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "account_open_date",
+              "type" : "date",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "account_flags",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            } ]
+          },
+          "isStreaming" : false
+        }, {
+          "id" : "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ",
+          "slug" : "in1",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ {
+              "name" : "customer_id",
+              "type" : "integer",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "amount",
+              "type" : "double",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            } ]
+          },
+          "isStreaming" : false
+        } ],
+        "outputs" : [ {
+          "id" : "8swaBB4gViIyg9eF-t8BH$$laJ_gZ0-xvlQkAU_8s6NH",
+          "slug" : "out"
+        } ],
+        "selectedInputFields" : [ ],
+        "isCustomOutputSchema" : false
+      },
+      "properties" : {
+        "conditions" : [ {
+          "alias" : "in1",
+          "expression" : {
+            "format" : "sql",
+            "expression" : "in0.customer_id = in1.customer_id"
+          },
+          "joinType" : "inner"
+        } ],
+        "expressions" : [ {
+          "target" : "customer_id",
+          "expression" : {
+            "format" : "sql",
+            "expression" : "in0.customer_id"
+          },
+          "description" : "",
+          "_row_id" : null
+        }, {
+          "target" : "first_name",
+          "expression" : {
+            "format" : "sql",
+            "expression" : "in0.first_name"
+          },
+          "description" : "",
+          "_row_id" : null
+        }, {
+          "target" : "last_name",
+          "expression" : {
+            "format" : "sql",
+            "expression" : "in0.last_name"
+          },
+          "description" : "",
+          "_row_id" : null
+        }, {
+          "target" : "account_open_date",
+          "expression" : {
+            "format" : "sql",
+            "expression" : "in0.account_open_date"
+          },
+          "description" : "",
+          "_row_id" : null
+        }, {
+          "target" : "amount",
+          "expression" : {
+            "format" : "sql",
+            "expression" : "in1.amount"
+          },
+          "description" : "",
+          "_row_id" : null
+        } ],
+        "hints" : [ {
+          "id" : "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4",
+          "alias" : "in0",
+          "hintType" : "none",
+          "propagateColumns" : false
+        }, {
+          "id" : "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ",
+          "alias" : "in1",
+          "hintType" : "none",
+          "propagateColumns" : false
+        } ],
+        "allIn1" : null,
+        "activeTab" : "expressions",
+        "columnsSelector" : [ "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##customer_id", "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ##customer_id", "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ##amount", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##first_name", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##account_open_date", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##last_name", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##customer_id" ],
+        "allIn0" : null,
+        "whereClause" : null,
+        "headAlias" : "in0"
+      }
+    },
     "ijVVGrHkKSh8gpEwBUxR-$$_H21XlU5cokpsgETLxNcT" : {
       "id" : "ijVVGrHkKSh8gpEwBUxR-$$_H21XlU5cokpsgETLxNcT",
       "component" : "Source",
       "metadata" : {
         "label" : "customer_ds",
         "slug" : "customer_ds",
-        "x" : 300,
-        "y" : 180,
+        "x" : 340,
+        "y" : 140,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -1044,8 +756,8 @@
       "metadata" : {
         "label" : "orders_ds",
         "slug" : "orders_ds",
-        "x" : 300,
-        "y" : 380,
+        "x" : 140,
+        "y" : 320,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -1070,8 +782,8 @@
       "metadata" : {
         "label" : "Aggregate_1",
         "slug" : "Aggregate_1",
-        "x" : 680,
-        "y" : 380,
+        "x" : 340,
+        "y" : 320,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -1084,6 +796,15 @@
           "schema" : {
             "type" : "struct",
             "fields" : [ {
+              "name" : "order_id",
+              "type" : "integer",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
               "name" : "customer_id",
               "type" : "integer",
               "nullable" : true,
@@ -1093,8 +814,8 @@
                 "tags" : [ ]
               }
             }, {
-              "name" : "amount",
-              "type" : "double",
+              "name" : "order_status",
+              "type" : "string",
               "nullable" : true,
               "metadata" : {
                 "description" : "",
@@ -1102,7 +823,25 @@
                 "tags" : [ ]
               }
             }, {
-              "name" : "s_amount",
+              "name" : "order_category",
+              "type" : "string",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "order_date",
+              "type" : "date",
+              "nullable" : true,
+              "metadata" : {
+                "description" : "",
+                "mappings" : [ ],
+                "tags" : [ ]
+              }
+            }, {
+              "name" : "amount",
               "type" : "double",
               "nullable" : true,
               "metadata" : {

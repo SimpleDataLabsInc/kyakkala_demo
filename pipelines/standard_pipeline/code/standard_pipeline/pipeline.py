@@ -9,9 +9,9 @@ from standard_pipeline.graph import *
 def pipeline(spark: SparkSession) -> None:
     df_customer_ds = customer_ds(spark)
     df_orders_ds = orders_ds(spark)
-    df_Join_1 = Join_1(spark, df_customer_ds, df_orders_ds)
-    df_Aggregate_1 = Aggregate_1(spark, df_Join_1)
-    df_Subgraph_1 = Subgraph_1(spark, Config.Subgraph_1, df_customer_ds, df_Aggregate_1)
+    df_Aggregate_1 = Aggregate_1(spark, df_orders_ds)
+    df_Join_1 = Join_1(spark, df_customer_ds, df_Aggregate_1)
+    df_Subgraph_1 = Subgraph_1(spark, Config.Subgraph_1, df_Join_1)
     customer_revenue(spark, df_Subgraph_1)
 
 def main():

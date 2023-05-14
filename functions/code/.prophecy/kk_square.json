@@ -1,1 +1,0 @@
-{"initCode":"","code":"@udf(returnType=DoubleType())\ndef prophecy_squared(value: float):\n    return value * value"}
