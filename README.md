@@ -19,3 +19,7 @@ kyakkala_parent
 *** Release notes for version: 0.5 ***
 
 kyakkala/parent
+
+*** Release notes for version: 0.5 ***
+
+project name change
