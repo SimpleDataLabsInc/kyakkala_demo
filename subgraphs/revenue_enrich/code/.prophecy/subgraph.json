@@ -220,7 +220,7 @@
           "target" : "total_expenditure",
           "expression" : {
             "format" : "sql",
-            "expression" : "concat(format_number(amount, 2), ' $$')"
+            "expression" : "concat(format_number(amount, 2), ' $')"
           },
           "description" : "",
           "_row_id" : "1375430042971738233"

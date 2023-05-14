@@ -20,7 +20,7 @@ pipelines:
     artefactID: ''
     language: python
     createdAt: '2023-05-14 04:25:42'
-    modifiedAt: '2023-05-14 05:11:31'
+    modifiedAt: '2023-05-14 05:18:04'
     datasets:
       inputs:
       - datasets/customer_ds
@@ -81,7 +81,7 @@ jobs: {}
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
-  modifiedAt: '2023-05-14 05:11:31'
+  modifiedAt: '2023-05-14 05:18:04'
   gems: {}
   udfs:
     udfs/kk_square:
@@ -104,7 +104,7 @@ subgraphs:
     artefactID: ''
     mode: batch
     createdAt: '2023-05-13 12:24:43'
-    modifiedAt: '2023-05-14 05:10:31'
+    modifiedAt: '2023-05-14 05:18:04'
 sqlModels: {}
 sqlMacros: {}
 sqlSeeds: {}
