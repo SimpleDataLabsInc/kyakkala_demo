@@ -23,3 +23,7 @@ kyakkala/parent
 *** Release notes for version: 0.5 ***
 
 project name change
+
+*** Release notes for version: 0.6 ***
+
+updating the gem logic
