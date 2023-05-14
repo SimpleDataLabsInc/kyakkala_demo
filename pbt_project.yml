@@ -1,6 +1,6 @@
 name: kk_demo
 description: ''
-version: '0.4'
+version: '0.5'
 author: kyakkala@prophecy.io
 language: python
 buildSystem: ''

@@ -15,3 +15,7 @@ kyakkala_demo
 *** Release notes for version: 0.4 ***
 
 kyakkala_parent
+
+*** Release notes for version: 0.5 ***
+
+kyakkala/parent
