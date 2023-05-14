@@ -77,32 +77,7 @@ datasets:
         createdAt: '2023-05-13 12:25:44'
         modifiedAt: '2023-05-13 12:25:44'
 templates: {}
-jobs:
-  jobs/customer_life_revenue_job:
-    name: customer_life_revenue_job
-    description: ''
-    fabricUID: 647
-    scheduler:
-      Databricks: {}
-    cloudProvider: null
-    jobSize: Small
-    scheduleCron: 0 0 0 1 * ? *
-    timeout: null
-    alerting:
-      emails: kyakkala@prophecy.io
-      onStart: false
-      onSuccess: true
-      onFailure: true
-    pipelines:
-    - pipelines/standard_pipeline
-    jobClusterMode:
-      clusterMode:
-        Single: {}
-      clusterId: null
-    enabled: true
-    createdAt: '2023-05-14 06:15:42'
-    modifiedAt: '2023-05-14 06:15:49'
-    author: kyakkala@prophecy.io
+jobs: {}
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
