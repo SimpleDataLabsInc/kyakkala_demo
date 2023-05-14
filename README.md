@@ -11,3 +11,7 @@ init demo building blocks
 *** Release notes for version: 0.3 ***
 
 kyakkala_demo
+
+*** Release notes for version: 0.4 ***
+
+kyakkala_parent
