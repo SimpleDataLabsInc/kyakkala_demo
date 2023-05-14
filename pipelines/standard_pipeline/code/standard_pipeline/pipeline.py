@@ -1,10 +1,10 @@
 from pyspark.sql import *
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
-from revenue_report.config.ConfigStore import *
-from revenue_report.udfs.UDFs import *
+from standard_pipeline.config.ConfigStore import *
+from standard_pipeline.udfs.UDFs import *
 from prophecy.utils import *
-from revenue_report.graph import *
+from standard_pipeline.graph import *
 
 def pipeline(spark: SparkSession) -> None:
     df_customer_ds = customer_ds(spark)
@@ -23,9 +23,9 @@ def main():
                 .getOrCreate()\
                 .newSession()
     Utils.initializeFromArgs(spark, parse_args())
-    spark.conf.set("prophecy.metadata.pipeline.uri", "pipelines/revenue_report")
+    spark.conf.set("prophecy.metadata.pipeline.uri", "pipelines/standard_pipeline")
     
-    MetricsCollector.start(spark = spark, pipelineId = "pipelines/revenue_report")
+    MetricsCollector.start(spark = spark, pipelineId = "pipelines/standard_pipeline")
     pipeline(spark)
     MetricsCollector.end(spark)
 

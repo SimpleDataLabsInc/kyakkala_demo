@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 setup(
-    name = 'revenue_report',
+    name = 'standard_pipeline',
     version = '1.0',
-    packages = find_packages(include = ('revenue_report*', )) + ["prophecy_config_instances"],
+    packages = find_packages(include = ('standard_pipeline*', )) + ["prophecy_config_instances"],
     package_dir = {'prophecy_config_instances' : 'configs/resources/config'},
     package_data = {'prophecy_config_instances' : ['*.json', '*.py']},
     description = 'workflow',
@@ -10,7 +10,7 @@ setup(
 'prophecy-libs==1.5.0'],
     entry_points = {
 'console_scripts' : [
-'main = revenue_report.pipeline:main'], },
+'main = standard_pipeline.pipeline:main'], },
     data_files = [(".prophecy", [".prophecy/workflow.latest.json"])],
     extras_require = {
 'test' : ['pytest', 'pytest-html'], }

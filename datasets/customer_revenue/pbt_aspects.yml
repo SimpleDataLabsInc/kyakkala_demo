@@ -23,14 +23,7 @@ schema:
       description: ''
       mappings: []
       tags: []
-  - name: join_year
-    type: string
-    nullable: true
-    metadata:
-      description: ''
-      mappings: []
-      tags: []
-  - name: join_month
+  - name: date_of_join
     type: string
     nullable: true
     metadata:

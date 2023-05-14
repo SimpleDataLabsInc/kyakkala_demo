@@ -12,15 +12,15 @@ buildSystemDetails:
   createdAt: '2023-05-11 09:10:37'
   modifiedAt: '2023-05-11 09:10:37'
 pipelines:
-  pipelines/revenue_report:
-    name: revenue_report
+  pipelines/standard_pipeline:
+    name: standard_pipeline
     description: ''
     author: kyakkala@prophecy.io
     mode: batch
     artefactID: ''
     language: python
-    createdAt: '2023-05-13 12:14:06'
-    modifiedAt: '2023-05-13 12:40:50'
+    createdAt: '2023-05-14 04:25:42'
+    modifiedAt: '2023-05-14 05:11:31'
     datasets:
       inputs:
       - datasets/customer_ds
@@ -32,11 +32,11 @@ pipelines:
     dependencies: {}
 datasets:
   datasets/customer_ds:
-    name: customer_ds
+    name: ds1
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:15:28'
-    modifiedAt: '2023-05-13 12:17:02'
+    modifiedAt: '2023-05-14 04:23:27'
     mode: batch
     physicalDatasets:
       dev:
@@ -47,11 +47,11 @@ datasets:
         createdAt: '2023-05-13 12:15:28'
         modifiedAt: '2023-05-13 12:15:28'
   datasets/orders_ds:
-    name: orders_ds
+    name: ds2
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:16:05'
-    modifiedAt: '2023-05-13 12:17:26'
+    modifiedAt: '2023-05-14 04:23:15'
     mode: batch
     physicalDatasets:
       dev:
@@ -62,11 +62,11 @@ datasets:
         createdAt: '2023-05-13 12:16:05'
         modifiedAt: '2023-05-13 12:16:05'
   datasets/customer_revenue:
-    name: customer_revenue
+    name: co_report
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:25:44'
-    modifiedAt: '2023-05-13 12:25:44'
+    modifiedAt: '2023-05-14 05:10:31'
     mode: batch
     physicalDatasets:
       dev:
@@ -81,9 +81,18 @@ jobs: {}
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
-  modifiedAt: '2023-05-11 09:10:37'
+  modifiedAt: '2023-05-14 05:11:31'
   gems: {}
-  udfs: {}
+  udfs:
+    udfs/kk_square:
+      name: kk_square
+      description: ''
+      tags: []
+      inputs: []
+      outputs: []
+      author: kyakkala@prophecy.io
+      createdAt: '2022-12-15 18:04:50'
+      modifiedAt: '2022-12-15 18:04:50'
   udafs: {}
   expressions: {}
 subgraphs:
@@ -95,7 +104,7 @@ subgraphs:
     artefactID: ''
     mode: batch
     createdAt: '2023-05-13 12:24:43'
-    modifiedAt: '2023-05-13 12:24:44'
+    modifiedAt: '2023-05-14 05:10:31'
 sqlModels: {}
 sqlMacros: {}
 sqlSeeds: {}

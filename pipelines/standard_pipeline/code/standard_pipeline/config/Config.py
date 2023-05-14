@@ -1,4 +1,4 @@
-from revenue_report.graph.Subgraph_1.config.Config import SubgraphConfig as Subgraph_1_Config
+from standard_pipeline.graph.Subgraph_1.config.Config import SubgraphConfig as Subgraph_1_Config
 from prophecy.config import ConfigBase
 
 

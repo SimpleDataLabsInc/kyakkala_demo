@@ -14,4 +14,8 @@ from prophecy.lookups import (
 )
 
 def registerUDFs(spark: SparkSession):
-    pass
+    spark.udf.register("kk_square", kk_square)
+
+@udf(returnType = DoubleType())
+def kk_square(value: float):
+    return value * value

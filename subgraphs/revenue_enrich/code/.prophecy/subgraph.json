@@ -39,37 +39,37 @@
     "packageName" : "report.customer.revenue"
   },
   "connections" : [ {
-    "id" : "5CDcrrKKhuK92jxFoFtEG$$iVyUC3vrHgDIpKMP7bhSF",
+    "id" : "q_qbfeD_oDnLEVn0Y1hY0",
     "source" : "eqweDPuOo-d4RvOTJ7tsR",
     "sourcePort" : "6gqnd6bQ5-JEQdEeAvfqk",
     "target" : "j-DSd8q4j_GylKQAhP7gP",
     "targetPort" : "pnTi7Xpvl5KWR5LJ7hPlT"
   }, {
-    "id" : "mtLBr9Tm3YPWGBevWpCU9$$E2YaBuhPYsAdXAMchZ-nA",
+    "id" : "Mo_3UW4B0XQNAJpY_bIBU",
     "source" : "j-DSd8q4j_GylKQAhP7gP",
     "sourcePort" : "IyqA_72WlU1D8SYctNfAQ",
     "target" : "UhcokrzrWn6rNQoNTjE7-",
     "targetPort" : "_2Aa0We62XzKnA2ELmNfO"
   }, {
-    "id" : "RU9W-4rQxY3xoQEKfx7fq$$ALMUUysDUXmP7an3E6RQD",
+    "id" : "LZ4PJ8rxKyUomLswwzFsZ",
     "source" : "UhcokrzrWn6rNQoNTjE7-",
     "sourcePort" : "82Hn6S343Rmkm42Rmf_eZ",
     "target" : "2G0Omr89WTvQLYjm75020",
     "targetPort" : "EY19cVXlkHuoWCagLvS3k"
   }, {
-    "id" : "Veh6fLzm90T_AYJqtaqPL",
+    "id" : "gNJoXO4RtTd6sRVATPrnE",
     "source" : "2G0Omr89WTvQLYjm75020",
     "sourcePort" : "dIUPhFCY6yA9aQZkzf436",
     "target" : "dZmjuvKGZu_v1XtzLcucz",
     "targetPort" : "BVUjWvQLTEiQSE9pGtu-7"
   }, {
-    "id" : "Pwvj6YkJmGYObk3LpqMJX",
+    "id" : "YVevHBXAWZV-wPioHs5nM",
     "source" : "dZmjuvKGZu_v1XtzLcucz",
     "sourcePort" : "HvfoTgG8_y8mYD6ymC03h",
     "target" : "eqweDPuOo-d4RvOTJ7tsR",
     "targetPort" : "LogNpDJW47USetETdww7g"
   }, {
-    "id" : "1ehglaPdi36LRolDzRsg_",
+    "id" : "-eOGjdv67fU01WtiMKz7p",
     "source" : "dZmjuvKGZu_v1XtzLcucz",
     "sourcePort" : "ocIYCcmNeGMRmT1Ju99Eq",
     "target" : "eqweDPuOo-d4RvOTJ7tsR",
@@ -82,8 +82,8 @@
       "metadata" : {
         "label" : "Join_2",
         "slug" : "Join_2",
-        "x" : 300,
-        "y" : 260,
+        "x" : 240,
+        "y" : 120,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -155,19 +155,19 @@
           "_row_id" : null
         } ],
         "hints" : [ {
-          "id" : "LogNpDJW47USetETdww7g$$LfqAAQIUJ230RTRNl4Zaa",
+          "id" : "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI",
           "alias" : "in0",
           "hintType" : "none",
           "propagateColumns" : false
         }, {
-          "id" : "W3tdzU9kYX1HIDPI5TfU-$$YVEximExv2dz1r8m_oOeG",
+          "id" : "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4",
           "alias" : "in1",
           "hintType" : "none",
           "propagateColumns" : false
         } ],
         "allIn1" : null,
         "activeTab" : "expressions",
-        "columnsSelector" : [ "LogNpDJW47USetETdww7g$$LfqAAQIUJ230RTRNl4Zaa##customer_id", "W3tdzU9kYX1HIDPI5TfU-$$YVEximExv2dz1r8m_oOeG##customer_id", "LogNpDJW47USetETdww7g$$LfqAAQIUJ230RTRNl4Zaa##first_name", "LogNpDJW47USetETdww7g$$LfqAAQIUJ230RTRNl4Zaa##customer_id", "W3tdzU9kYX1HIDPI5TfU-$$YVEximExv2dz1r8m_oOeG##amount", "LogNpDJW47USetETdww7g$$LfqAAQIUJ230RTRNl4Zaa##last_name", "LogNpDJW47USetETdww7g$$LfqAAQIUJ230RTRNl4Zaa##account_open_date" ],
+        "columnsSelector" : [ "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4##customer_id", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##customer_id", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##first_name", "W3tdzU9kYX1HIDPI5TfU-$$ocKgqSYWpBicpzDZHNeQ4##amount", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##last_name", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##account_open_date", "LogNpDJW47USetETdww7g$$Eluo1GK7lsxmGecwA3EWI##customer_id" ],
         "allIn0" : null,
         "whereClause" : null,
         "headAlias" : "in0"
@@ -179,8 +179,8 @@
       "metadata" : {
         "label" : "Reformat_1",
         "slug" : "Reformat_1",
-        "x" : 480,
-        "y" : 260,
+        "x" : 440,
+        "y" : 120,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -220,30 +220,22 @@
           "target" : "total_expenditure",
           "expression" : {
             "format" : "sql",
-            "expression" : "concat('$$', round(amount, 2))"
+            "expression" : "concat(format_number(amount, 2), ' $$')"
           },
           "description" : "",
           "_row_id" : "1375430042971738233"
         }, {
-          "target" : "join_year",
+          "target" : "date_of_join",
           "expression" : {
             "format" : "sql",
-            "expression" : "date_format(account_open_date, 'yyyy')"
+            "expression" : "date_format(account_open_date, 'MMM, yyyy')"
           },
           "description" : "",
           "_row_id" : "319137195895865448"
-        }, {
-          "target" : "join_month",
-          "expression" : {
-            "format" : "sql",
-            "expression" : "date_format(account_open_date, 'MMM')"
-          },
-          "description" : "",
-          "_row_id" : "4737040065913091946"
         } ],
         "importString" : "customer_id,customer_id\nfull_name,``concat(first_name, ', ', last_name)``\ntotal_expenditure,``concat('$$', round(amount, 2))``\njoin_year,``date_format(account_open_date, 'yyyy')``\njoin_month,``date_format(account_open_date, 'MMM')``",
         "activeTab" : "expressions",
-        "columnsSelector" : [ "pnTi7Xpvl5KWR5LJ7hPlT$$NE-X-TK9IV_gdrclsnknZ##customer_id" ]
+        "columnsSelector" : [ "pnTi7Xpvl5KWR5LJ7hPlT$$lz6rqDGRYSGLG8lYiHKsI##last_name", "pnTi7Xpvl5KWR5LJ7hPlT$$lz6rqDGRYSGLG8lYiHKsI##account_open_date", "pnTi7Xpvl5KWR5LJ7hPlT$$lz6rqDGRYSGLG8lYiHKsI##customer_id", "pnTi7Xpvl5KWR5LJ7hPlT$$lz6rqDGRYSGLG8lYiHKsI##first_name", "pnTi7Xpvl5KWR5LJ7hPlT$$lz6rqDGRYSGLG8lYiHKsI##amount" ]
       }
     },
     "UhcokrzrWn6rNQoNTjE7-" : {
@@ -253,7 +245,7 @@
         "label" : "OrderBy_1",
         "slug" : "OrderBy_1",
         "x" : 640,
-        "y" : 260,
+        "y" : 120,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
@@ -272,17 +264,11 @@
         "isCustomOutputSchema" : false
       },
       "properties" : {
-        "columnsSelector" : [ "_2Aa0We62XzKnA2ELmNfO$$UdVO1HRFijRxINLkHKNQf##join_month", "_2Aa0We62XzKnA2ELmNfO$$UdVO1HRFijRxINLkHKNQf##join_year" ],
+        "columnsSelector" : [ "_2Aa0We62XzKnA2ELmNfO$$4SkvL5KnyAPajLRACrfT3##date_of_join" ],
         "orders" : [ {
           "expression" : {
             "format" : "sql",
-            "expression" : "join_year"
-          },
-          "sortType" : "desc"
-        }, {
-          "expression" : {
-            "format" : "sql",
-            "expression" : "join_month"
+            "expression" : "date_of_join"
           },
           "sortType" : "desc"
         } ]
@@ -294,8 +280,8 @@
       "metadata" : {
         "label" : "Repartition_1",
         "slug" : "Repartition_1",
-        "x" : 860,
-        "y" : 260,
+        "x" : 840,
+        "y" : 120,
         "phase" : 0,
         "cache" : false,
         "detailedStats" : false,
