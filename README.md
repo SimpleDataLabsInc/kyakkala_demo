@@ -27,3 +27,7 @@ project name change
 *** Release notes for version: 0.6 ***
 
 updating the gem logic
+
+*** Release notes for version: 0.7 ***
+
+del job
