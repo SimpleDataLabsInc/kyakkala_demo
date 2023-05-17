@@ -32,11 +32,11 @@ pipelines:
     dependencies: {}
 datasets:
   datasets/customer_ds:
-    name: ds1
+    name: raw_customer_ds
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:15:28'
-    modifiedAt: '2023-05-14 04:23:27'
+    modifiedAt: '2023-05-17 08:16:14'
     mode: batch
     physicalDatasets:
       dev:
@@ -47,11 +47,11 @@ datasets:
         createdAt: '2023-05-13 12:15:28'
         modifiedAt: '2023-05-13 12:15:28'
   datasets/orders_ds:
-    name: ds2
+    name: raw_orders_ds
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:16:05'
-    modifiedAt: '2023-05-14 04:23:15'
+    modifiedAt: '2023-05-17 08:16:30'
     mode: batch
     physicalDatasets:
       dev:
@@ -62,11 +62,11 @@ datasets:
         createdAt: '2023-05-13 12:16:05'
         modifiedAt: '2023-05-13 12:16:05'
   datasets/customer_revenue:
-    name: co_report
+    name: customer_rpt
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:25:44'
-    modifiedAt: '2023-05-14 06:14:32'
+    modifiedAt: '2023-05-17 08:19:53'
     mode: batch
     physicalDatasets:
       dev:
