@@ -35,3 +35,7 @@ del job
 *** Release notes for version: 0.8 ***
 
 Updating the ds names
+
+*** Release notes for version: 0.9 ***
+
+add job
