@@ -1,6 +1,7 @@
 from pyspark.sql import *
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
+from prophecy.utils import *
 from standard_pipeline.config.ConfigStore import *
 from standard_pipeline.udfs.UDFs import *
 from prophecy.utils import *
@@ -24,6 +25,7 @@ def main():
                 .newSession()
     Utils.initializeFromArgs(spark, parse_args())
     spark.conf.set("prophecy.metadata.pipeline.uri", "pipelines/standard_pipeline")
+    registerUDFs(spark)
     
     MetricsCollector.start(spark = spark, pipelineId = "pipelines/standard_pipeline")
     pipeline(spark)

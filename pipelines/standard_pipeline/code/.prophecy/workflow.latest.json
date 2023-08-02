@@ -2,7 +2,7 @@
   "metainfo" : {
     "id" : "1",
     "language" : "python",
-    "fabricId" : "647",
+    "fabricId" : "3230",
     "frontEndLanguage" : "sql",
     "mode" : "batch",
     "udfs" : {
@@ -25,7 +25,8 @@
             "fields" : [ ]
           },
           "optional" : false,
-          "isWorkflowNodeConfiguration" : true
+          "isWorkflowNodeConfiguration" : true,
+          "isReferenced" : false
         } ]
       },
       "oldCommon" : {
@@ -49,7 +50,7 @@
     "interimModeEnabled" : true,
     "visualCodeInterimMode" : "Disabled",
     "recordsLimit" : {
-      "enabled" : false,
+      "enabled" : true,
       "value" : 1000
     },
     "topLevelPackage" : "standard_pipeline",
@@ -718,7 +719,7 @@
         } ],
         "allIn1" : null,
         "activeTab" : "expressions",
-        "columnsSelector" : [ "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##customer_id", "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ##customer_id", "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ##amount", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##first_name", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##account_open_date", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##last_name", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##customer_id" ],
+        "columnsSelector" : [ "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ##customer_id", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##customer_id", "foJaXXT4y84z_HXE5rGzm$$A9SgTMoJf9I9rdPwHLfBQ##amount", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##customer_id", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##account_open_date", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##last_name", "Ntk_yVBmP8qGGv7flh0eO$$Ud6u-dXkPZ7IX7vAQfWr4##first_name" ],
         "allIn0" : null,
         "whereClause" : null,
         "headAlias" : "in0"

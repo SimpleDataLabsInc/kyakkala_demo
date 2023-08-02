@@ -10,7 +10,6 @@ buildSystemDetails:
   buildSystem: wheel
   author: null
   createdAt: '2023-05-11 09:10:37'
-  modifiedAt: '2023-05-11 09:10:37'
 pipelines:
   pipelines/standard_pipeline:
     name: standard_pipeline
@@ -20,7 +19,6 @@ pipelines:
     artefactID: ''
     language: python
     createdAt: '2023-05-14 04:25:42'
-    modifiedAt: '2023-05-14 06:15:06'
     datasets:
       inputs:
       - datasets/customer_ds
@@ -36,7 +34,6 @@ datasets:
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:15:28'
-    modifiedAt: '2023-05-17 08:16:14'
     mode: batch
     physicalDatasets:
       dev:
@@ -45,13 +42,11 @@ datasets:
         description: ''
         author: kyakkala@prophecy.io
         createdAt: '2023-05-13 12:15:28'
-        modifiedAt: '2023-05-13 12:15:28'
   datasets/orders_ds:
     name: raw_orders_ds
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:16:05'
-    modifiedAt: '2023-05-17 08:16:30'
     mode: batch
     physicalDatasets:
       dev:
@@ -60,13 +55,11 @@ datasets:
         description: ''
         author: kyakkala@prophecy.io
         createdAt: '2023-05-13 12:16:05'
-        modifiedAt: '2023-05-13 12:16:05'
   datasets/customer_revenue:
     name: customer_rpt
     description: ''
     author: kyakkala@prophecy.io
     createdAt: '2023-05-13 12:25:44'
-    modifiedAt: '2023-05-17 08:19:53'
     mode: batch
     physicalDatasets:
       dev:
@@ -75,13 +68,35 @@ datasets:
         description: ''
         author: kyakkala@prophecy.io
         createdAt: '2023-05-13 12:25:44'
-        modifiedAt: '2023-05-13 12:25:44'
 templates: {}
-jobs: {}
+jobs:
+  jobs/revenue_monthly:
+    name: revenue_monthly
+    description: ''
+    fabricUID: 647
+    scheduler:
+      Databricks: {}
+    cloudProvider: null
+    jobSize: Small
+    scheduleCron: 0 0 0 1 * ? *
+    timeout: null
+    alerting:
+      emails: kyakkala@prophecy.io
+      onStart: false
+      onSuccess: true
+      onFailure: true
+    pipelines:
+    - pipelines/standard_pipeline
+    jobClusterMode:
+      clusterMode:
+        Single: {}
+      clusterId: null
+    enabled: false
+    createdAt: '2023-05-17 10:19:12'
+    author: kyakkala@prophecy.io
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
-  modifiedAt: '2023-05-14 06:14:32'
   gems: {}
   udfs: {}
   udafs: {}
@@ -95,7 +110,6 @@ subgraphs:
     artefactID: ''
     mode: batch
     createdAt: '2023-05-13 12:24:43'
-    modifiedAt: '2023-05-14 06:14:03'
 sqlModels: {}
 sqlMacros: {}
 sqlSeeds: {}
