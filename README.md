@@ -31,3 +31,7 @@ updating the gem logic
 *** Release notes for version: 0.7 ***
 
 del job
+
+*** Release notes for version: 0.8 ***
+
+Updating the ds names
