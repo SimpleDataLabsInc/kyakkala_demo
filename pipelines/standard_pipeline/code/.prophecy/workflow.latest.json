@@ -1,6 +1,7 @@
 {
   "metainfo" : {
     "id" : "1",
+    "uri" : "pipelines/standard_pipeline",
     "language" : "python",
     "fabricId" : "3230",
     "frontEndLanguage" : "sql",
@@ -757,7 +758,7 @@
       "metadata" : {
         "label" : "orders_ds",
         "slug" : "orders_ds",
-        "x" : 140,
+        "x" : 120,
         "y" : 320,
         "phase" : 0,
         "cache" : false,
