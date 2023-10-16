@@ -1,0 +1,9 @@
+
+
+why f_cdur_events were part of rxClaims instead of NDSLA?
+Scheduled interval: Everyday 13:30. Can you please confirm time zone?
+Can you please Confirm on d_plan soft dependency?
+Why yun2021 instead of yun2023 (as current year is 2023) on bronze?
+Functional Diff between current_month and Processing_month
+For custom graph, Does the input data is missing?
+Can please Provide queries for processing month
