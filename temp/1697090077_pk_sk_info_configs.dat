@@ -1,0 +1,62 @@
+{
+  "d_cag": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_cag",
+    "synapse-table": "orx_idw_dm_prd.d_cag",
+    "pk-cols": [
+      "carrier_id",
+      "account_id",
+      "employer_group_id"
+    ],
+    "sk-cols": "cag_sk"
+  },
+  "d_carrier": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_carrier",
+    "synapse-table": "orx_idw_dm_prd.d_carrier",
+    "pk-cols": [
+      "carrier_id"
+    ],
+    "sk-cols": "carrier_sk"
+  },
+  "d_gpi": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_gpi",
+    "synapse-table": "orx_idw_dm_prd.d_gpi",
+    "pk-cols": [
+      "gpi_id"
+    ],
+    "sk-cols": "gpi_sk"
+  },
+  "d_member": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_member",
+    "synapse-table": "orx_idw_dm_prd.d_member",
+    "pk-cols": [
+      "carrier_id",
+      "account_id",
+      "employer_group_id",
+      "mbr_id"
+    ],
+    "sk-cols": "mbr_sk"
+  },
+  "d_product": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_product",
+    "synapse-table": "orx_idw_dm_prd.d_product",
+    "pk-cols": [
+      "prod_id",
+      "prod_id_qlfr_cd"
+    ],
+    "sk-cols": "prod_sk"
+  },
+  "l_formulary_client_xrfe": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_formulary_client_xrfe",
+    "synapse-table": "orx_idw_dm_prd.l_formulary_client_xrfe",
+    "pk-cols": [
+      "client_id"
+    ],
+    "sk-cols": "client_xrfe_sk"
+  }
+}

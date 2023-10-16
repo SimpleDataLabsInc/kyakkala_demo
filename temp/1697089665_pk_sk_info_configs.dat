@@ -1,0 +1,34 @@
+{
+  "d_reporting_client_map_enrich": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_reporting_client_map_enrich",
+    "synapse-table": "orx_idw_dm_prd.d_reporting_client_map_enrich",
+    "pk-cols": [
+      "rptg_clt_nm"
+    ],
+    "sk-cols": "dxf_sk"
+  },
+  "d_cag": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_cag",
+    "synapse-table": "orx_idw_dm_prd.d_cag",
+    "pk-cols": [
+      "carrier_id",
+      "account_id",
+      "employer_group_id"
+    ],
+    "sk-cols": "cag_sk"
+  },
+  "d_member": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_member",
+    "synapse-table": "orx_idw_dm_prd.d_member",
+    "pk-cols": [
+      "carrier_id",
+      "account_id",
+      "employer_group_id",
+      "mbr_id"
+    ],
+    "sk-cols": "mbr_sk"
+  }
+}

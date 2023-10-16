@@ -1,0 +1,137 @@
+{
+  "d_cag": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_cag",
+    "synapse-table": "orx_idw_dm_prd.d_cag",
+    "pk-cols": [
+      "carrier_id",
+      "account_id",
+      "employer_group_id"
+    ],
+    "sk-cols": "cag_sk"
+  },
+  "d_carrier": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_carrier",
+    "synapse-table": "orx_idw_dm_prd.d_carrier",
+    "pk-cols": [
+      "carrier_id"
+    ],
+    "sk-cols": "carrier_sk"
+  },
+  "d_member": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_member",
+    "synapse-table": "orx_idw_dm_prd.d_member",
+    "pk-cols": [
+      "carrier_id",
+      "account_id",
+      "employer_group_id",
+      "mbr_id"
+    ],
+    "sk-cols": "mbr_sk"
+  },
+  "l_admin_route": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_admin_route",
+    "synapse-table": "orx_idw_dm_prd.l_admin_route",
+    "pk-cols": [
+      "admin_rte_id"
+    ],
+    "sk-cols": "admin_rte_sk"
+  },
+  "l_ahfs": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_ahfs",
+    "synapse-table": "orx_idw_dm_prd.l_ahfs",
+    "pk-cols": [
+      "ahfs_cd"
+    ],
+    "sk-cols": "ahfs_cd_sk"
+  },
+  "l_dea": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_dea",
+    "synapse-table": "orx_idw_dm_prd.l_dea",
+    "pk-cols": [
+      "dea_cd"
+    ],
+    "sk-cols": "dea_cd_sk"
+  },
+  "d_drug": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_drug",
+    "synapse-table": "orx_idw_dm_prd.d_drug",
+    "pk-cols": [
+      "drg_nm_extn_id"
+    ],
+    "sk-cols": "drug_sk"
+  },
+  "l_drug_maintenance": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_drug_maintenance",
+    "synapse-table": "orx_idw_dm_prd.l_drug_maintenance",
+    "pk-cols": [
+      "drug_maint_cd"
+    ],
+    "sk-cols": "drug_maint_cd_sk"
+  },
+  "l_drug_otc_indicator": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_drug_otc_indicator",
+    "synapse-table": "orx_idw_dm_prd.l_drug_otc_indicator",
+    "pk-cols": [
+      "drug_rx_otc_ind"
+    ],
+    "sk-cols": "drug_rx_otc_ind_sk"
+  },
+  "l_dosage_form": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_dosage_form",
+    "synapse-table": "orx_idw_dm_prd.l_dosage_form",
+    "pk-cols": [
+      "dsg_frm_id"
+    ],
+    "sk-cols": "dsg_frm_sk"
+  },
+  "l_generic_medispan_indicator": {
+    "fmt": "table",
+    "src": "prophecy_dev.l_generic_medispan_indicator",
+    "synapse-table": "orx_idw_dm_prd.l_generic_medispan_indicator",
+    "pk-cols": [
+      "gnrc_mdspn_ind"
+    ],
+    "sk-cols": "gnrc_mdspn_ind_sk"
+  },
+  "d_gpi": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_gpi",
+    "synapse-table": "orx_idw_dm_prd.d_gpi",
+    "pk-cols": [
+      "gpi_id"
+    ],
+    "sk-cols": "gpi_sk"
+  },
+  "d_product": {
+    "fmt": "table",
+    "src": "prophecy_dev.d_product",
+    "synapse-table": "orx_idw_dm_prd.d_product",
+    "pk-cols": [
+      "prod_id",
+      "prod_id_qlfr_cd"
+    ],
+    "sk-cols": "prod_sk"
+  },
+  "rcecip": {
+    "fmt": "table",
+    "src": "prophecy_dev.rcecip",
+    "synapse-table": "orx_idw_dm_prd.rcecip",
+    "pk-cols": [
+      "claim_nbr",
+      "claim_seq_nbr",
+      "claim_stat_id",
+      "src_env_sk"
+    ],
+    "sk-cols": "claim_nbr,claim_seq_nbr,claim_stat_id,claim_stat_sk,carrier_sk,carrier_acct_sk,cag_sk,mbr_sk,final_pln_sk,phr_sk,pbr_sk,compound_sk,orig_carrier_sk,orig_mbr_sk,orig_cag_sk,orig_carrier_id,orig_account_id,orig_employer_group_id,orig_member_id,claim_seq_nbr_src,sbm_dt_sk,sbm_dt,filled_dt_sk,filled_dt,rx_written_dt,rx_nbr,refill_nbr,drg_qty,awp_unit_cost,refill_max,days_sply,days_of_supply_sk,dmr_ind_sk,injectable_ind_sk,injectable_ind,app_patient_pay_amt,app_due_amt,clt_ingred_cost_paid,clt_dispensing_fee,sbm_ingred_cost_paid,sbm_dispensing_fee,sbm_patient_pay_amt,sbm_due_amt"
+  }
+}

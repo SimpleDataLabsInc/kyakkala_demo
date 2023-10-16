@@ -1,0 +1,45 @@
+
+-----------------a_mpd_monthly_mbrship_summary-------------------
+{
+  "final_table_schema": "{\"mmr_sum_sk\": \"long\", \"carrier_id\": \"string\", \"adj_start_dt\": \"date\", \"adj_end_dt\": \"date\", \"mmr_mnth\": \"int\", \"education_fee_amt\": \"decimal(14, 2)\", \"cob\": \"decimal(14, 2)\", \"sequest_adj_amt\": \"decimal(14, 2)\", \"late_penalty_amt\": \"decimal(14, 2)\", \"total_amt\": \"decimal(14, 2)\", \"src_env_sk\": \"long\", \"rec_stat_cd\": \"short\", \"run_id\": \"long\", \"update_uid\": \"string\", \"update_ts\": \"timestamp\", \"insert_uid\": \"string\", \"insert_ts\": \"timestamp\"}",
+  "pipeline_name": "a_mpd_monthly_mbrship_summary",
+  "primary_key": "carrier_id,adj_start_dt,adj_end_dt,mmr_mnth,education_fee_amt,cob,sequest_adj_amt,late_penalty_amt,total_amt",
+  "reformat_rules": "{\n  \"adj_start_dt\" : \"adj_start_dt\",\n  \"adj_end_dt\" : \"adj_end_dt\",\n  \"education_fee_amt\" : \"education\",\n  \"mmr_sum_sk\" : \"-1\",\n  \"mmr_mnth\" : \"CAST(substring(adj_start_dt, 0, 6) AS DECIMAL(38,0))\",\n  \"cob\" : \"cob\",\n  \"total_amt\" : \"total\",\n  \"carrier_id\" : \"carrier\",\n  \"src_env_sk\" : \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\",\n  \"sequest_adj_amt\" : \"sequestration_adj\",\n  \"late_penalty_amt\" : \"net_late_enrollment_penalty_amount\"\n}",
+  "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
+  "source_table": "",
+  "target_table": "a_mpd_monthly_mbrship_summary",
+  "sk_service_col": "mmr_sum_sk",
+  "read_incremental_files_flag": "false"
+}
+-----------------d_reporting_client_map-------------------
+{
+  "final_table_schema": "{\"rptg_clt_id\": \"int\", \"rptg_clt_nm\": \"string\", \"cag_sk\": \"long\", \"carrier_id\": \"string\", \"account_id\": \"string\", \"employer_group_id\": \"string\", \"eff_dt\": \"date\", \"bk_of_bsns\": \"string\", \"mbr_dtl_flg\": \"string\", \"src_env_sk\": \"long\", \"rec_stat_cd\": \"short\", \"run_id\": \"long\", \"update_uid\": \"string\", \"update_ts\": \"timestamp\", \"insert_uid\": \"string\", \"insert_ts\": \"timestamp\"}",
+  "optional_filter_rules": "CAST(CASE WHEN (account_id = '*') THEN 1 WHEN ((account_id = cag_account_id) AND (employer_group_id = '*')) THEN 1 WHEN ((account_id = cag_account_id) AND (employer_group_id = cag_employer_group_id)) THEN 1 ELSE 0 END AS BOOLEAN)",
+  "pipeline_name": "d_reporting_client_map",
+  "primary_key": "rptg_clt_id,carrier_id,account_id,employer_group_id",
+  "reformat_rules": "{\n  \"eff_dt\": \"date_format(to_date(effective_date, 'MM/dd/yyyy'), 'yyyyMMdd')\",\n  \"cag_sk\": \"CAST(cag_sk AS DECIMAL(38,0))\",\n  \"bk_of_bsns\": \"bk_of_busines\",\n  \"account_id\": \"cag_account_id\",\n  \"rptg_clt_nm\": \"client_name\",\n  \"mbr_dtl_flg\": \"mbr_dtl_flg\",\n  \"carrier_id\": \"cag_carrier_id\",\n  \"employer_group_id\": \"cag_employer_group_id\",\n  \"rptg_clt_id\": \"CAST(dxf_sk0 AS DECIMAL(38,0))\",\n  \"src_env_sk\": \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\",\n  \"client_name\": \"client_name\"\n}",
+  "reformat_rules_join": "joins = [\n  {\n    \"fmt\": \"csv\",\n    \"src\": \"rxclaim.d_reporting_client_map_enrich\",\n    \"join-cond\": \"in1.rptg_clt_nm = in0.client_name\",\n    \"val-cols\": [\n      \"in1.dxf_sk AS dxf_sk0\"\n    ]\n  }\n]",
+  "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
+  "source_table": "",
+  "target_table": "d_reporting_client_map",
+  "sk_service_col": "rptg_clt_id",
+  "read_incremental_files_flag": "false",
+  "optional_sk_config": "sks=[\n  {\n    \"table-name\": \"d_reporting_client_map_enrich\",\n    \"sk-col\": \"dxf_sk\",\n    \"nk-col\": [\n      \"client_name\"\n    ]\n  }\n]"
+}
+-----------------f_mpd_monthly_mbrship_detail-------------------
+{
+  "default_source_blank_nulls": "carrier, account, group",
+  "final_table_schema": "{\"carrier_id\": \"string\", \"account_id\": \"string\", \"employer_group_id\": \"string\", \"mbr_id\": \"string\", \"cag_sk\": \"long\", \"mbr_sk\": \"long\", \"client_nm\": \"string\", \"mbr_fname\": \"string\", \"mbr_lname\": \"string\", \"birth_dt\": \"date\", \"hicn\": \"string\", \"mbi\": \"string\", \"adj_start_dt\": \"date\", \"adj_end_dt\": \"date\", \"mmr_mnth\": \"int\", \"direct_subsidy_amt\": \"decimal(9, 2)\", \"lips_amt\": \"decimal(9, 2)\", \"lics_amt\": \"decimal(9, 2)\", \"reinsurance_amt\": \"decimal(9, 2)\", \"total_amt\": \"decimal(9, 2)\", \"payment_mnth_flg\": \"string\", \"repeat_cnt\": \"string\", \"pk\": \"long\", \"risk_factor\": \"decimal(13, 5)\", \"cms_reason_cd\": \"string\", \"claim_cntr\": \"int\", \"rsp_due_amt\": \"decimal(15, 2)\", \"src_env_sk\": \"long\", \"rec_stat_cd\": \"short\", \"run_id\": \"long\", \"update_uid\": \"string\", \"update_ts\": \"timestamp\", \"insert_uid\": \"string\", \"insert_ts\": \"timestamp\"}",
+  "pipeline_name": "f_mpd_monthly_mbrship_detail",
+  "primary_key": "client_nm,carrier_id,account_id,employer_group_id,mbr_id,mbr_fname,mbr_lname,birth_dt,hicn,mbi,adj_start_dt,adj_end_dt,mmr_mnth,direct_subsidy_amt,lips_amt,lics_amt,reinsurance_amt,total_amt,payment_mnth_flg,repeat_cnt,pk,risk_factor,cms_reason_cd",
+  "reformat_rules": "{\n  \"repeat_cnt\": \"repeat_count\",\n  \"risk_factor\": \"risk_factor\",\n  \"cag_sk\": \"in1_cag_sk\",\n  \"adj_start_dt\": \"adj_start_dt\",\n  \"adj_end_dt\": \"adj_end_dt\",\n  \"mbr_id\": \"member_id\",\n  \"lics_amt\": \"lics_am\",\n  \"rsp_due_amt\": \"0\",\n  \"payment_mnth_flg\": \"payment_month_flag\",\n  \"mmr_mnth\": \"CAST(date_format(to_date(regexp_replace(regexp_replace(regexp_replace(dxf_src_file_name, '.*[/]', '', 1), '.xlsx', '', 1), '.*[_]', '', 1), 'yyyyMMdd'), 'yyyyMM') AS DECIMAL(38,0))\",\n  \"reinsurance_amt\": \"reinsurance_am\",\n  \"direct_subsidy_amt\": \"direct_subsidy_am\",\n  \"mbi\": \"'-'\",\n  \"mbr_sk\": \"in1_mbr_sk\",\n  \"total_amt\": \"total_am\",\n  \"lips_amt\": \"lips_am\",\n  \"birth_dt\": \"birth_dt\",\n  \"pk\": \"CAST(pk AS DECIMAL(38,0))\",\n  \"account_id\": \"account\",\n  \"hicn\": \"hicn\",\n  \"mbr_lname\": \"last_name\",\n  \"client_nm\": \"client_name\",\n  \"carrier_id\": \"carrier\",\n  \"cms_reason_cd\": \"adj_reason_cd\",\n  \"employer_group_id\": \"group\",\n  \"src_env_sk\": \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\",\n  \"claim_cntr\": \"0\",\n  \"mbr_fname\": \"first_name\",\n  \"member_id\": \"member_id\",\n  \"group\": \"group\",\n  \"carrier\": \"carrier\",\n  \"account\": \"account\"\n}",
+  "reformat_rules_join": "joins = [\n  {\n    \"fmt\": \"table\",\n    \"src\": \"orx_idw_dm_prd.d_cag\",\n    \"join-cond\": \"in1.carrier_id = in0.carrier AND in1.account_id = in0.account AND in1.employer_group_id = in0.group\",\n    \"val-cols\": [\n      \"in1.cag_sk as in1_cag_sk\"\n    ]\n  },\n  {\n    \"fmt\": \"table\",\n    \"src\": \"orx_idw_dm_prd.d_member\",\n    \"join-cond\": \"in1.carrier_id = in0.carrier AND in1.account_id = in0.account AND in1.employer_group_id = in0.group AND in1.mbr_id = in0.member_id\",\n    \"val-cols\": [\n      \"in1.mbr_sk as in1_mbr_sk\"\n    ]\n  }\n]",
+  "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
+  "source_table": "",
+  "target_table": "f_mpd_monthly_mbrship_detail",
+  "encrypt_cols": "mbr_fname,mbr_lname,hicn,mbi",
+  "encrypt_scope": "idwshared-dbscope",
+  "read_incremental_files_flag": "false",
+  "sk_service_self_join": "false",
+  "optional_sk_config": "sks=[\n  {\n    \"table-name\": \"d_cag\",\n    \"sk-col\": \"cag_sk\",\n    \"nk-col\": [\n      \"carrier\",\n      \"account\",\n      \"group\"\n    ]\n  },\n  {\n    \"table-name\": \"d_member\",\n    \"sk-col\": \"mbr_sk\",\n    \"nk-col\": [\n      \"carrier\",\n      \"account\",\n      \"group\",\n      \"member_id\"\n    ]\n  }\n]"
+}
