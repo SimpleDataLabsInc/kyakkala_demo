@@ -7,4 +7,3 @@ Why yun2021 instead of yun2023 (as current year is 2023) on bronze?
 Functional Diff between current_month and Processing_month
 For custom graph, Does the input data is missing?
 Can please Provide queries for processing month
-ghp_CqFc6aIm0m4dlmUdmw1xh2gqw9tSNr12OvF
