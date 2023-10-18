@@ -1,0 +1,33 @@
+import scala.util.Try
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+val readProcessFileTry = Try(spark.read.option("delimiter", "|").csv(Config.f_cdur_event_catchup_process_file_path))
+
+val (sbm_dt, sbm_dt_end, catchup_month, catchup_year, src_env_sk_filter) =
+    if(readProcessFileTry.isSuccess){
+        val firstRecord = readProcessFileTry.get.head
+        (
+            LocalDate.parse(firstRecord.getString(0), DateTimeFormatter.ofPattern("yyyyMMdd")).toString,
+            LocalDate.parse(firstRecord.getString(1), DateTimeFormatter.ofPattern("yyyyMMdd")).toString,
+            firstRecord.getString(2),
+            firstRecord.getString(3),
+            firstRecord.getString(4)
+        )
+    } else if(readProcessFileTry.failed.get.getLocalizedMessage contains "Path does not exist") {
+        (
+            LocalDate.now().minusMonths(1).withDayOfMonth(1).toString
+            LocalDate.now().withDayOfMonth(1).toString
+            Config.sbm_dt.substring(5, 7)
+            Config.sbm_dt.substring(0, 4)
+            "520"
+        )
+    } else throw readProcessFileTry.failed.get
+
+println(s"Configs: sbm_dt=${sbm_dt}, sbm_dt_end=${sbm_dt_end}, catchup_month=${catchup_month}, catchup_year=${catchup_year}, src_env_sk_filter=${src_env_sk_filter}")
+
+spark.conf.set("sbm_dt", sbm_dt)
+spark.conf.set("sbm_dt_end", sbm_dt_end)
+spark.conf.set("catchup_month", catchup_month)
+spark.conf.set("catchup_year", catchup_year)
+spark.conf.set("src_env_sk_filter", src_env_sk_filter)
