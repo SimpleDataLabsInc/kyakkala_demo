@@ -31,6 +31,15 @@
           "optional" : false,
           "isWorkflowNodeConfiguration" : true,
           "isReferenced" : false
+        }, {
+          "name" : "db_name",
+          "kind" : {
+            "type" : "string",
+            "value" : "prophecy_demos"
+          },
+          "optional" : false,
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
         } ]
       },
       "oldCommon" : {
@@ -667,13 +676,13 @@
           "target" : "account_length_days",
           "expression" : {
             "format" : "sql",
-            "expression" : "datediff(current_date(), account_open_date)\n"
+            "expression" : "datediff(current_date(), account_open_date)"
           },
           "description" : ""
         } ],
         "importString" : "",
         "activeTab" : "expressions",
-        "columnsSelector" : [ "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##order_id", "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##account_open_date", "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##customer_id", "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##amount" ]
+        "columnsSelector" : [ "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##order_id", "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##account_open_date", "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##amount", "fMZAlefWKfnyTvExjHSiQ$$KZfEaJa-uCkQvFIbkTmbt##customer_id" ]
       },
       "componentInfo" : {
         "gemId" : "gitUri=http://gitserver:3000/DxEheDCJ_team_5751/DxEheDCJ_project_12654.git&subPath=&tag=0.0.5&projectSubscriptionProjectId=12654&path=gems/Reformat",
@@ -779,7 +788,7 @@
         "pivotColumn" : null,
         "pivotValues" : [ ],
         "activeTab" : "aggregate",
-        "columnsSelector" : [ "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##account_length_days", "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##amount", "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##customer_id", "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##order_id" ],
+        "columnsSelector" : [ "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##customer_id", "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##amount", "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##account_length_days", "YqtGmikpgohjiBjr3P-CP$$wZr48MdqFPAl7KxRGbUKN##order_id" ],
         "groupBy" : [ {
           "target" : "customer_id",
           "expression" : {
@@ -2122,7 +2131,7 @@
                 "sourceColumn" : "first_name",
                 "expression" : {
                   "format" : "sql",
-                  "expression" : "case when first_name like '%a%' then upper(first_name) else first_name end"
+                  "expression" : "CASE WHEN first_name LIKE '%a%' THEN upper(first_name) ELSE first_name END"
                 }
               }
             } ],
@@ -2307,7 +2316,7 @@
           "alias" : "in1",
           "expression" : {
             "format" : "sql",
-            "expression" : "in0.customer_id = in1.customer_id"
+            "expression" : "(in0.customer_id = in1.customer_id)"
           },
           "joinType" : "inner"
         } ],
@@ -2429,11 +2438,11 @@
         } ],
         "allIn1" : null,
         "activeTab" : "conditions",
-        "columnsSelector" : [ "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##customer_id", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##customer_id", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##last_name", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##email", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##amount", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##country_code", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##customer_id", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_status", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##account_open_date", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_date", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##account_flags", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_category", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##first_name", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_id", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##phone" ],
+        "columnsSelector" : [ "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##customer_id", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##customer_id", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_status", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_id", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##country_code", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##email", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##customer_id", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_date", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##last_name", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##account_flags", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##phone", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##order_category", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##account_open_date", "U7MEMGKf5O3VRwyQfW944$$3r5rGOfl5lH8QCmMVOA20##first_name", "7E1orpjDQQf8RCQIJsujq$$yJWH72J42Ss-yNzLdM1B0##amount" ],
         "allIn0" : null,
         "whereClause" : {
           "format" : "sql",
-          "expression" : "in0.country_code != 'US'"
+          "expression" : "(NOT (in0.country_code = 'US'))"
         },
         "headAlias" : "in0"
       },

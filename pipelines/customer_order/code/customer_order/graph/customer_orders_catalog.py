@@ -7,4 +7,4 @@ from customer_order.config.ConfigStore import *
 from customer_order.udfs.UDFs import *
 
 def customer_orders_catalog(spark: SparkSession, in0: DataFrame):
-    in0.write.format("delta").mode("overwrite").saveAsTable("`prophecy_demos`.`customer_orders`")
+    in0.write.format("delta").mode("overwrite").saveAsTable("`prophecy_demos`.`customer_orders_kk`")

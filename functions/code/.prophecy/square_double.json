@@ -1,0 +1,1 @@
+{"initCode":"","code":"@udf(returnType = IntegerType()) \ndef square(value: float): \n\treturn int(value) * int(value)\n"}

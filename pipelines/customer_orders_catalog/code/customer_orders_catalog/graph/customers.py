@@ -7,4 +7,4 @@ from customer_orders_catalog.config.ConfigStore import *
 from customer_orders_catalog.udfs.UDFs import *
 
 def customers(spark: SparkSession) -> DataFrame:
-    return spark.read.table("`prophecy_demos`.`customers`")
+    return spark.read.table(f"`{Config.db_name}`.`customers`")

@@ -190,7 +190,15 @@ gemContainer:
 functions:
   author: null
   createdAt: '2023-05-11 09:10:37'
-  udfs: {}
+  udfs:
+    udfs/square_double:
+      name: square_double
+      description: ''
+      tags: []
+      inputs: []
+      outputs: []
+      author: kyakkala@prophecy.io
+      createdAt: '2022-12-15 18:04:50'
   udafs: {}
   expressions: {}
 subgraphs:
