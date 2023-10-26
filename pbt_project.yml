@@ -29,7 +29,7 @@ pipelines:
     - subgraphs/revenue_enrich
     dependencies: {}
   pipelines/customer_orders_catalog:
-    name: customer_orders_catalog
+    name: standard_pipeline_catalog
     description: ''
     author: kyakkala@prophecy.io
     mode: batch
@@ -47,6 +47,22 @@ pipelines:
       - datasets/customer_delta
       - datasets/customer_orders_catalog
       - datasets/orders_delta
+    subgraphs: []
+    dependencies: {}
+  pipelines/customer_order:
+    name: customer_order
+    description: ''
+    author: kyakkala@prophecy.io
+    mode: batch
+    artefactID: ''
+    language: python
+    createdAt: '2023-10-26 09:54:11'
+    datasets:
+      inputs:
+      - datasets/customer_delta
+      - datasets/orders_delta
+      outputs:
+      - datasets/customer_orders_catalog
     subgraphs: []
     dependencies: {}
 datasets:
