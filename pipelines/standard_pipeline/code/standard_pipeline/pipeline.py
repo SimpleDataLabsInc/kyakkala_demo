@@ -14,6 +14,7 @@ def pipeline(spark: SparkSession) -> None:
     df_Join_1 = Join_1(spark, df_customer_ds, df_Aggregate_1)
     df_Subgraph_1 = Subgraph_1(spark, Config.Subgraph_1, df_Join_1)
     customer_revenue(spark, df_Subgraph_1)
+    df_SchemaTransform_1 = SchemaTransform_1(spark, df_customer_ds)
 
 def main():
     spark = SparkSession.builder\
