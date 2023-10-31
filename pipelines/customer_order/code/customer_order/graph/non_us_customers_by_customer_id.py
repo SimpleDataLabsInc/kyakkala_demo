@@ -6,7 +6,7 @@ from prophecy.libs import typed_lit
 from customer_order.config.ConfigStore import *
 from customer_order.udfs.UDFs import *
 
-def by_customerid(spark: SparkSession, in0: DataFrame, in1: DataFrame, ) -> DataFrame:
+def non_us_customers_by_customer_id(spark: SparkSession, in0: DataFrame, in1: DataFrame, ) -> DataFrame:
     return in0\
         .alias("in0")\
         .join(in1.alias("in1"), (col("in0.customer_id") == col("in1.customer_id")), "inner")\

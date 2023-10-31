@@ -1,0 +1,213 @@
+{
+  "metainfo" : {
+    "type" : "Databricks",
+    "fabricId" : "5544",
+    "jobId" : "jobs/revenue_report",
+    "name" : "revenue_report",
+    "schedule" : "0 0 0 1 * ? *",
+    "scheduleTimeZone" : "UTC",
+    "jobClusterMode" : {
+      "clusterMode" : "Single"
+    },
+    "enabled" : true,
+    "defaultClusterSize" : "Medium",
+    "alerting" : {
+      "emails" : "kyakkala@prophecy.io",
+      "onStart" : false,
+      "onSuccess" : true,
+      "onFailure" : false
+    },
+    "maxConcurrentRuns" : 1,
+    "processDefaultSettings" : {
+      "type" : "Inherited",
+      "retries" : 0,
+      "alerting" : {
+        "emails" : "",
+        "onStart" : false,
+        "onSuccess" : false,
+        "onFailure" : false
+      }
+    },
+    "availableFabrics" : [ {
+      "id" : "2807",
+      "name" : "demos-unity-catalog-guides-dev",
+      "clusterSizes" : {
+        "default" : "small",
+        "availableClusterSizes" : [ "small", "small-with-new-java", "large" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "5544",
+      "name" : "kk_fab",
+      "clusterSizes" : {
+        "default" : "Medium",
+        "availableClusterSizes" : [ "Medium" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "1777",
+      "name" : "db_product",
+      "clusterSizes" : {
+        "default" : "small",
+        "availableClusterSizes" : [ "small", "Large" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "4615",
+      "name" : "product-workspace",
+      "clusterSizes" : {
+        "default" : "small (autoscale)",
+        "availableClusterSizes" : [ "small (autoscale)" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "4005",
+      "name" : "demos-qa",
+      "clusterSizes" : {
+        "default" : "small",
+        "availableClusterSizes" : [ "small" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "4004",
+      "name" : "demos-prod",
+      "clusterSizes" : {
+        "default" : "small",
+        "availableClusterSizes" : [ "small" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "647",
+      "name" : "dev",
+      "clusterSizes" : {
+        "default" : "Small",
+        "availableClusterSizes" : [ "Small" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "1174",
+      "name" : "demos",
+      "clusterSizes" : {
+        "default" : "small",
+        "availableClusterSizes" : [ "small", "large_autoscale" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    }, {
+      "id" : "5812",
+      "name" : "guides-dev-fb",
+      "clusterSizes" : {
+        "default" : "M",
+        "availableClusterSizes" : [ "M" ]
+      },
+      "pylibsResolutionMode" : {
+        "PublicCentral" : { }
+      },
+      "scalalibsResolutionMode" : {
+        "PublicCentral" : { }
+      }
+    } ]
+  },
+  "processes" : {
+    "_phP4Yv3AEWB3Dto-2foa" : {
+      "id" : "_phP4Yv3AEWB3Dto-2foa",
+      "component" : "Pipeline",
+      "metadata" : {
+        "label" : "customer_order_2",
+        "slug" : "customer_order_2",
+        "x" : -140,
+        "y" : -40
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "edkHIlHPhJ4H7k_I9Ww1R",
+          "slug" : ""
+        } ],
+        "outputs" : [ {
+          "id" : "45sqvZbHjxh5ecXF1FQwA",
+          "slug" : ""
+        } ]
+      },
+      "settings" : {
+        "type" : "Inherited",
+        "alerting" : {
+          "emails" : "",
+          "onStart" : false,
+          "onSuccess" : false,
+          "onFailure" : false
+        }
+      },
+      "properties" : {
+        "pipelineId" : "pipelines/customer_order",
+        "configurations" : {
+          "schema" : [ {
+            "name" : "Subgraph_1",
+            "optional" : false,
+            "kind" : {
+              "type" : "record",
+              "fields" : [ ]
+            },
+            "isReferenced" : false,
+            "isWorkflowNodeConfiguration" : true
+          }, {
+            "name" : "db_name",
+            "optional" : false,
+            "kind" : {
+              "type" : "string",
+              "value" : "prophecy_demos"
+            },
+            "isReferenced" : false,
+            "isWorkflowNodeConfiguration" : false
+          } ],
+          "instances" : {
+            "kk_helloworld_git" : [ "default", "db_alpha" ]
+          },
+          "overrides" : {
+            "db_name" : "override_name"
+          },
+          "selectedInstance" : "default"
+        }
+      }
+    }
+  },
+  "connections" : [ ]
+}

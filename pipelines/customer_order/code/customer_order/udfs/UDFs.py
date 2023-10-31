@@ -14,8 +14,15 @@ from prophecy.lookups import (
 )
 
 def registerUDFs(spark: SparkSession):
+    spark.udf.register("square_double", square_double)
+    
+
     try:
         from prophecy.utils import ScalaUtil
         ScalaUtil.initializeUDFs(spark)
     except :
         pass
+
+@udf(returnType = IntegerType())
+def square_double(value: float):
+    return int(value) * int(value)

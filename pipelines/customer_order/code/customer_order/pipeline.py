@@ -8,12 +8,31 @@ from prophecy.utils import *
 from customer_order.graph import *
 
 def pipeline(spark: SparkSession) -> None:
-    df_customers = customers(spark)
-    df_orders = orders(spark)
-    df_by_customerid = by_customerid(spark, df_customers, df_orders)
-    df_Cleanup = Cleanup(spark, df_by_customerid)
-    df_Aggregate_1_1 = Aggregate_1_1(spark, df_Cleanup)
-    customer_orders_catalog(spark, df_Aggregate_1_1)
+    df_read_customers_table_1 = read_customers_table_1(spark)
+    df_SQLStatement_1 = SQLStatement_1(spark, df_read_customers_table_1)
+    df_read_customers_table = read_customers_table(spark)
+    df_read_orders_table = read_orders_table(spark)
+    df_non_us_customers_by_customer_id = non_us_customers_by_customer_id(
+        spark, 
+        df_read_customers_table, 
+        df_read_orders_table
+    )
+
+    if (Config.enable_customer_order_laod == true):
+        df_customer_account_summary = customer_account_summary(spark, df_non_us_customers_by_customer_id)
+    else:
+        df_customer_account_summary = df_non_us_customers_by_customer_id
+
+    df_customer_orders_summary = customer_orders_summary(spark, df_customer_account_summary)
+    df_Subgraph_1 = Subgraph_1(
+        spark, 
+        Config.Subgraph_1, 
+        df_non_us_customers_by_customer_id, 
+        df_non_us_customers_by_customer_id
+    )
+    df_WindowFunction_1 = WindowFunction_1(spark, df_non_us_customers_by_customer_id)
+    customer_orders_catalog(spark, df_customer_orders_summary)
+    df_Script_1 = Script_1(spark, df_non_us_customers_by_customer_id)
 
 def main():
     spark = SparkSession.builder\

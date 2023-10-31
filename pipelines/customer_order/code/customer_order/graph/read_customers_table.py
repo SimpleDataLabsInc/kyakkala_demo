@@ -6,5 +6,5 @@ from prophecy.libs import typed_lit
 from customer_order.config.ConfigStore import *
 from customer_order.udfs.UDFs import *
 
-def orders(spark: SparkSession) -> DataFrame:
-    return spark.read.table("`prophecy_demos`.`orders`")
+def read_customers_table(spark: SparkSession) -> DataFrame:
+    return spark.read.table(f"`{Config.db_name}`.`customers`")

@@ -6,7 +6,7 @@ from prophecy.libs import typed_lit
 from customer_order.config.ConfigStore import *
 from customer_order.udfs.UDFs import *
 
-def Aggregate_1_1(spark: SparkSession, in0: DataFrame) -> DataFrame:
+def customer_orders_summary(spark: SparkSession, in0: DataFrame) -> DataFrame:
     df1 = in0.groupBy(col("customer_id"))
 
     return df1.agg(

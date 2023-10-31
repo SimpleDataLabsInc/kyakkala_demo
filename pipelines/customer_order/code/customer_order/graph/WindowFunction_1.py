@@ -6,10 +6,8 @@ from prophecy.libs import typed_lit
 from customer_order.config.ConfigStore import *
 from customer_order.udfs.UDFs import *
 
-def Cleanup(spark: SparkSession, in0: DataFrame) -> DataFrame:
-    return in0.select(
-        col("order_id"), 
-        col("customer_id"), 
-        col("amount"), 
-        datediff(current_date(), col("account_open_date")).alias("account_length_days")
+def WindowFunction_1(spark: SparkSession, in0: DataFrame) -> DataFrame:
+    return in0.withColumn(
+        "purchase_order",
+        row_number().over(Window.partitionBy(col("customer_id")).orderBy(col("order_date").asc()))
     )

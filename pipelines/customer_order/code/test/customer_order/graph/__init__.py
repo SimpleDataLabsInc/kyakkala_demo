@@ -1,1 +1,1 @@
-from .test_by_customerid import *
+from .test_non_us_customers_by_customer_id import *
