@@ -1,0 +1,723 @@
+{
+  "metainfo" : {
+    "id" : "1",
+    "uri" : "pipelines/excel_to_delta_load",
+    "language" : "scala",
+    "fabricId" : "81",
+    "frontEndLanguage" : "sql",
+    "mode" : "batch",
+    "udfs" : {
+      "language" : "scala",
+      "udfs" : [ ],
+      "functionPackageName" : "hd_migration_team.rx_claims_pipelines.functions",
+      "sharedFunctionPackageNames" : [ "hd_migration_team.dxf_framework.functions" ],
+      "sharedUDFs" : [ {
+        "udfs" : [ {
+          "id" : "497/functions/udfs/ff3_encrypt_idwdata",
+          "name" : "ff3_encrypt_idwdata",
+          "code" : "udf(ff3_encrypt _)",
+          "language" : "scala",
+          "initCode" : "import scala.reflect.runtime.{universe => ru}\r\nimport scala.reflect.runtime.currentMirror\r\n\r\ndef ff3_encrypt(\r\n        ff3_key: String,\r\n        ff3_tweak: String,\r\n        plainValue: String\r\n    ): String = {\r\n      try {\r\n        if (plainValue != null) {\r\n          val ff3CipherClass =\r\n            currentMirror.classLoader.loadClass(\r\n              \"com.privacylogistics.FF3Cipher\"\r\n            )\r\n          val ff3CipherConstructor =\r\n            ff3CipherClass.getConstructor(classOf[String], classOf[String])\r\n          val c = ff3CipherConstructor\r\n            .newInstance(ff3_key, ff3_tweak)\r\n            .asInstanceOf[{\r\n                def encrypt(plainValue: String): String\r\n              }\r\n            ]\r\n          val ciphertext = c.encrypt(plainValue)\r\n          ciphertext\r\n        } else {\r\n          null\r\n        }\r\n      } catch {\r\n        case _: ClassNotFoundException => {\r\n          throw new Exception(\r\n            \"Please install ff3_1_0 and log4j_api_2_17_1 jar on the cluster to use ff3_encrypt_idwdata function\"\r\n          )\r\n          null\r\n        }\r\n        case default: Throwable => {\r\n          println(\"Exception while converting encrypting value: \" + plainValue)\r\n          null\r\n        }\r\n      }\r\n    }",
+          "isShared" : true
+        } ],
+        "projectName" : "dxf_framework"
+      } ]
+    },
+    "udafs" : {
+      "language" : "scala",
+      "code" : "package udfs\n\nimport org.apache.spark.sql.expressions._\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql._\n\n/**\n  * Here you can define your custom aggregate functions.\n  *\n  * Make sure to register your `udafs` in the register_udafs function below.\n  *\n  * Example:\n  *\n  * object GeometricMean extends UserDefinedAggregateFunction {\n  *   // This is the input fields for your aggregate function.\n  *   override def inputSchema: org.apache.spark.sql.types.StructType =\n  *     StructType(StructField(\"value\", DoubleType) :: Nil)\n  *\n  *   // This is the internal fields you keep for computing your aggregate.\n  *   override def bufferSchema: StructType = StructType(\n  *     StructField(\"count\", LongType) ::\n  *     StructField(\"product\", DoubleType) :: Nil\n  *   )\n  *\n  *   // This is the output type of your aggregatation function.\n  *   override def dataType: DataType = DoubleType\n  *\n  *   override def deterministic: Boolean = true\n  *\n  *   // This is the initial value for your buffer schema.\n  *   override def initialize(buffer: MutableAggregationBuffer): Unit = {\n  *     buffer(0) = 0L\n  *     buffer(1) = 1.0\n  *   }\n  *\n  *   // This is how to update your buffer schema given an input.\n  *   override def update(buffer: MutableAggregationBuffer, input: Row): Unit = {\n  *     buffer(0) = buffer.getAs[Long](0) + 1\n  *     buffer(1) = buffer.getAs[Double](1) * input.getAs[Double](0)\n  *   }\n  *\n  *   // This is how to merge two objects with the bufferSchema type.\n  *   override def merge(buffer1: MutableAggregationBuffer, buffer2: Row): Unit = {\n  *     buffer1(0) = buffer1.getAs[Long](0) + buffer2.getAs[Long](0)\n  *     buffer1(1) = buffer1.getAs[Double](1) * buffer2.getAs[Double](1)\n  *   }\n  *\n  *   // This is where you output the final value, given the final value of your bufferSchema.\n  *   override def evaluate(buffer: Row): Any = {\n  *     math.pow(buffer.getDouble(1), 1.toDouble / buffer.getLong(0))\n  *   }\n  * }\n  *\n  */\n\n\nobject UDAFs {\n  /**\n    * Registers UDAFs with Spark SQL\n    */\n  def registerUDAFs(spark: SparkSession): Unit = {\n    /**\n      * Example:\n      *\n      * spark.udf.register(\"gm\", GeometricMean)\n      *\n      */\n\n\n  }\n}\n"
+    },
+    "configuration" : {
+      "common" : {
+        "type" : "record",
+        "fields" : [ {
+          "name" : "pipeline_name",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Pipeline name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "target_schema",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Delta target schema name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "target_table",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Delta target table name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "source_excel_location",
+          "kind" : {
+            "type" : "string",
+            "value" : "dbfs:/mnt/location"
+          },
+          "optional" : false,
+          "comment" : "Excel source file location",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "excel_file_pattern",
+          "kind" : {
+            "type" : "string",
+            "value" : "fileregex_(\\d{8})\\.xlsx"
+          },
+          "optional" : false,
+          "comment" : "Excel file regex",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "source_name",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Source name of the file",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "read_incremental_files_flag",
+          "kind" : {
+            "type" : "boolean",
+            "value" : true
+          },
+          "optional" : false,
+          "comment" : "To enable/disable the incremental loads",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "incremental_table_cutoff_date",
+          "kind" : {
+            "type" : "string",
+            "value" : "19000101"
+          },
+          "optional" : false,
+          "comment" : "Cut off date if you want to set the maxwatermark",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "incremental_col_format",
+          "kind" : {
+            "type" : "string",
+            "value" : "yyyyMMdd"
+          },
+          "optional" : false,
+          "comment" : "Format of the date value present in the filename like yyyyMMdd, yyyy-MM-dd",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "incremental_load_metadata_table",
+          "kind" : {
+            "type" : "string",
+            "value" : "temp.incremental_load_metadata_table"
+          },
+          "optional" : false,
+          "comment" : "Incremental load table name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "excel_options",
+          "kind" : {
+            "type" : "string",
+            "value" : "{\"dataAddress\": \"'MySheet'!A1\", \"header\": \"true\", \"inferSchema\": \"true\"}"
+          },
+          "optional" : false,
+          "comment" : "Options to read the excel in JSON format with keys like dataAddress, header, inferSchema",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "data_mart",
+          "kind" : {
+            "type" : "string",
+            "value" : "rx_claim"
+          },
+          "optional" : false,
+          "comment" : "Data mart name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        } ]
+      },
+      "oldCommon" : {
+        "type" : "record",
+        "fields" : [ {
+          "name" : "pipeline_name",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Pipeline name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "target_schema",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Delta target schema name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "target_table",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Delta target table name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "source_excel_location",
+          "kind" : {
+            "type" : "string",
+            "value" : "dbfs:/mnt/location"
+          },
+          "optional" : false,
+          "comment" : "Excel source file location",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "excel_file_pattern",
+          "kind" : {
+            "type" : "string",
+            "value" : "fileregex_(\\d{8})\\.xlsx"
+          },
+          "optional" : false,
+          "comment" : "Excel file regex",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "source_name",
+          "kind" : {
+            "type" : "string",
+            "value" : ""
+          },
+          "optional" : false,
+          "comment" : "Source name of the file",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "read_incremental_files_flag",
+          "kind" : {
+            "type" : "boolean",
+            "value" : true
+          },
+          "optional" : false,
+          "comment" : "To enable/disable the incremental loads",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "incremental_table_cutoff_date",
+          "kind" : {
+            "type" : "string",
+            "value" : "19000101"
+          },
+          "optional" : false,
+          "comment" : "Cut off date if you want to set the maxwatermark",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "incremental_col_format",
+          "kind" : {
+            "type" : "string",
+            "value" : "yyyyMMdd"
+          },
+          "optional" : false,
+          "comment" : "Format of the date value present in the filename like yyyyMMdd, yyyy-MM-dd",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "incremental_load_metadata_table",
+          "kind" : {
+            "type" : "string",
+            "value" : "temp.incremental_load_metadata_table"
+          },
+          "optional" : false,
+          "comment" : "Incremental load table name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "excel_options",
+          "kind" : {
+            "type" : "string",
+            "value" : "{\"dataAddress\": \"'MySheet'!A1\", \"header\": \"true\", \"inferSchema\": \"true\"}"
+          },
+          "optional" : false,
+          "comment" : "Options to read the excel in JSON format with keys like dataAddress, header, inferSchema",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        }, {
+          "name" : "data_mart",
+          "kind" : {
+            "type" : "string",
+            "value" : "rx_claim"
+          },
+          "optional" : false,
+          "comment" : "Data mart name",
+          "isWorkflowNodeConfiguration" : false,
+          "isReferenced" : false
+        } ]
+      },
+      "fabrics" : {
+        "mmr" : {
+          "type" : "record",
+          "fields" : [ {
+            "name" : "pipeline_name",
+            "kind" : {
+              "type" : "string",
+              "value" : "mmr"
+            },
+            "optional" : false,
+            "comment" : "Pipeline name",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "target_table",
+            "kind" : {
+              "type" : "string",
+              "value" : "mmr_test"
+            },
+            "optional" : false,
+            "comment" : "Delta target table name",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "incremental_table_cutoff_date",
+            "kind" : {
+              "type" : "string",
+              "value" : "20231010"
+            },
+            "optional" : false,
+            "comment" : "Cut off date if you want to set the maxwatermark",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "source_name",
+            "kind" : {
+              "type" : "string",
+              "value" : "mmr_exel"
+            },
+            "optional" : false,
+            "comment" : "Source name of the file",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "read_incremental_files_flag",
+            "kind" : {
+              "type" : "boolean",
+              "value" : false
+            },
+            "optional" : false,
+            "comment" : "To enable/disable the incremental loads",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "excel_options",
+            "kind" : {
+              "type" : "string",
+              "value" : "{\"dataAddress\": \"'detail'!A1\", \"header\": \"true\", \"inferSchema\": \"true\"}"
+            },
+            "optional" : false,
+            "comment" : "Options to read the excel in JSON format with keys like dataAddress, header, inferSchema",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "excel_file_pattern",
+            "kind" : {
+              "type" : "string",
+              "value" : "MMR_Report_EGWPS046_(\\d{8})\\.xlsx"
+            },
+            "optional" : false,
+            "comment" : "Excel file regex",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "source_excel_location",
+            "kind" : {
+              "type" : "string",
+              "value" : "dbfs:/mnt/local/source"
+            },
+            "optional" : false,
+            "comment" : "Excel source file location",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          }, {
+            "name" : "target_schema",
+            "kind" : {
+              "type" : "string",
+              "value" : "prophecy_dev"
+            },
+            "optional" : false,
+            "comment" : "Delta target schema name",
+            "isWorkflowNodeConfiguration" : false,
+            "isReferenced" : false
+          } ]
+        },
+        "default" : {
+          "type" : "record",
+          "fields" : [ ]
+        }
+      },
+      "instances" : {
+        "mmr" : {
+          "pipeline_name" : "mmr",
+          "target_schema" : "prophecy_dev",
+          "target_table" : "mmr_test",
+          "excel_file_pattern" : "MMR_Report_EGWPS046_(\\d{8})\\.xlsx",
+          "source_name" : "mmr_exel",
+          "read_incremental_files_flag" : false,
+          "incremental_table_cutoff_date" : "20231010",
+          "excel_options" : "{\"dataAddress\": \"'detail'!A1\", \"header\": \"true\", \"inferSchema\": \"true\"}",
+          "source_excel_location" : "dbfs:/mnt/local/source"
+        },
+        "default" : { }
+      },
+      "selected" : "mmr",
+      "nonEditable" : [ ],
+      "isSubscribedPipelineWithPipelineConfigs" : false,
+      "resolvedConfigs" : {
+        "mmr" : {
+          "pipeline_name" : "mmr",
+          "target_schema" : "prophecy_dev",
+          "target_table" : "mmr_test",
+          "source_excel_location" : "dbfs:/mnt/local/source",
+          "excel_file_pattern" : "MMR_Report_EGWPS046_(\\d{8})\\.xlsx",
+          "source_name" : "mmr_exel",
+          "read_incremental_files_flag" : false,
+          "incremental_table_cutoff_date" : "20231010",
+          "incremental_col_format" : "yyyyMMdd",
+          "incremental_load_metadata_table" : "temp.incremental_load_metadata_table",
+          "excel_options" : "{\"dataAddress\": \"'detail'!A1\", \"header\": \"true\", \"inferSchema\": \"true\"}",
+          "data_mart" : "rx_claim"
+        },
+        "default" : {
+          "pipeline_name" : "",
+          "target_schema" : "",
+          "target_table" : "",
+          "source_excel_location" : "dbfs:/mnt/location",
+          "excel_file_pattern" : "fileregex_(\\d{8})\\.xlsx",
+          "source_name" : "",
+          "read_incremental_files_flag" : true,
+          "incremental_table_cutoff_date" : "19000101",
+          "incremental_col_format" : "yyyyMMdd",
+          "incremental_load_metadata_table" : "temp.incremental_load_metadata_table",
+          "excel_options" : "{\"dataAddress\": \"'MySheet'!A1\", \"header\": \"true\", \"inferSchema\": \"true\"}",
+          "data_mart" : "rx_claim"
+        }
+      }
+    },
+    "sparkConf" : [ ],
+    "hadoopConf" : [ ],
+    "codeMode" : "sparse",
+    "buildSystem" : "maven",
+    "externalDependencies" : [ ],
+    "dependentProjectExternalDependencies" : [ {
+      "projectUID" : "497",
+      "projectName" : "dxf_framework",
+      "externalDependencies" : [ {
+        "type" : "coordinates",
+        "coordinates" : "org.scalaj:scalaj-http_2.12:2.4.2",
+        "name" : "scalaj",
+        "enabled" : false,
+        "id" : "4DPk0",
+        "exclusions" : [ ]
+      }, {
+        "type" : "coordinates",
+        "coordinates" : "com.microsoft.azure:adal4j:1.6.7",
+        "name" : "adal4j",
+        "enabled" : false,
+        "id" : "o7tqV",
+        "exclusions" : [ ]
+      } ]
+    } ],
+    "isImported" : false,
+    "interimMode" : "Full",
+    "interimModeEnabled" : true,
+    "visualCodeInterimMode" : "Disabled",
+    "recordsLimit" : {
+      "enabled" : false,
+      "value" : 1000
+    },
+    "topLevelPackage" : "io.prophecy.pipelines.excel_to_delta_load",
+    "configurationVersion" : "v1"
+  },
+  "connections" : [ {
+    "id" : "zfJSq0xcOj5fJnvXHcQiu",
+    "source" : "ni81tduIxsYIaElALf51m$$Alq15m70d6RuzfcIVC4sS",
+    "sourcePort" : "iT9yFmnMXciHKTZvzHe3M$$FCYWUp46l-k9_1OJaVqoA",
+    "target" : "Nyw2ZfbxahilSs3MHmWsW$$2OurB7JEK3Ls8JkgUy0IF",
+    "targetPort" : "rN6IuUCcDYwFKL3T-AmXW$$Qaj8eneLdK15N609pqlAJ"
+  }, {
+    "id" : "c18bohle7STBGPcVdy8Kw",
+    "source" : "Nyw2ZfbxahilSs3MHmWsW$$2OurB7JEK3Ls8JkgUy0IF",
+    "sourcePort" : "fkPaJ5NZRsH4UeNSKQcRB$$BjTGC-Bc0ArPsedAYu58R",
+    "target" : "nFIFy063_Vu0E_T9NTltp$$D8W4C8-8chxsXN4atcTyV",
+    "targetPort" : "8BCz9sNVAp0AynhdJgvzv$$gEQIcq5Vwf6kNGlv1n7qq"
+  }, {
+    "id" : "RBSzNK5RyOgcAzAyfSOe1",
+    "source" : "nFIFy063_Vu0E_T9NTltp$$D8W4C8-8chxsXN4atcTyV",
+    "sourcePort" : "h0-as2cRwyhfN2DaN9KR3$$WG6Z8NYlEoXseHCZA2mk8",
+    "target" : "drRDHrwkLk82HIoBr-eax$$xGa60vTnHKfyWZ60LvcU5",
+    "targetPort" : "a2N6sVpT4EP7eodeChSMa$$xiSkzcgf-v1YNXBH0wOHZ"
+  } ],
+  "processes" : {
+    "ni81tduIxsYIaElALf51m$$Alq15m70d6RuzfcIVC4sS" : {
+      "id" : "ni81tduIxsYIaElALf51m$$Alq15m70d6RuzfcIVC4sS",
+      "component" : "Script",
+      "metadata" : {
+        "label" : "read_source_excel",
+        "slug" : "read_source_excel",
+        "x" : 120,
+        "y" : 120,
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false,
+        "isImported" : false
+      },
+      "ports" : {
+        "inputs" : [ ],
+        "outputs" : [ {
+          "id" : "iT9yFmnMXciHKTZvzHe3M$$FCYWUp46l-k9_1OJaVqoA",
+          "slug" : "out0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ ]
+          },
+          "isStreaming" : false
+        } ],
+        "selectedInputFields" : [ ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : false
+      },
+      "properties" : {
+        "script" : "\r\nimport scala.util.matching.Regex\r\nimport pureconfig._\r\nimport pureconfig.generic.auto._\r\nimport java.time._\r\nimport java.time.format.DateTimeFormatter\r\nimport scala.util.{Try, Success, Failure}\r\nimport org.apache.spark.sql.functions._\r\n\r\nval formatter = DateTimeFormatter.ofPattern(Config.incremental_col_format).withZone(ZoneId.of(\"America/Chicago\"))\r\nval execelFileRegex = new Regex(Config.excel_file_pattern)\r\nval excel_options = ConfigSource.string(Config.excel_options).loadOrThrow[Map[String, String]]\r\nvar lastLoadTimestamp: String = if(Config.incremental_table_cutoff_date.trim().isEmpty)\r\n  formatter.format(DateTimeFormatter.ofPattern(\"yyyy-MM-dd\").parse(\"1900-01-01\"))\r\nelse \r\n  Config.incremental_table_cutoff_date\r\n\r\nif (Config.read_incremental_files_flag && spark.catalog.tableExists(Config.incremental_load_metadata_table)) {\r\n  lastLoadTimestamp = spark\r\n    .sql(\r\n      s\"SELECT last_process_timestamp from ${Config.incremental_load_metadata_table} where pipeline_name = '${Config.pipeline_name}' and target = '${Config.target_table}'\"\r\n    ).collect().headOption.map(_.getString(0)).getOrElse(lastLoadTimestamp)\r\n}\r\n\r\nval excelFilesWithWatermark = dbutils.fs.ls(Config.source_excel_location)\r\n  .flatMap{fileInfo => \r\n    val currentWatermarkOpt = execelFileRegex.findFirstMatchIn(fileInfo.name)\r\n    if(Config.read_incremental_files_flag && currentWatermarkOpt.map(_.group(1) > lastLoadTimestamp).getOrElse(false))\r\n      currentWatermarkOpt.map(_.group(1)) match {\r\n        case Some(x) =>  Some((fileInfo.path, currentWatermarkOpt.map(_.group(1)).get))\r\n        case None => throw new Exception(s\"Please correct the excel_file_pattern: ${Config.excel_file_pattern} to have grouping '()' in the pattern when read_incremental_files_flag is enabled\")\r\n      }\r\n    else if(!Config.read_incremental_files_flag && currentWatermarkOpt.nonEmpty)\r\n      Some((fileInfo.path, \"\"))\r\n    else None\r\n  }.toList\r\n\r\nval out0 = if(excelFilesWithWatermark.isEmpty) {\r\n  print(\"No excel files to process\")\r\n  spark.createDataFrame(Seq((\"1\", \"1\"), (\"2\", \"2\")))\r\n} else {\r\n  \r\n  spark.conf.set(\"max_processed_file_timestamp\", excelFilesWithWatermark.map(_._2).max)\r\n  println(s\"Reading files: ${excelFilesWithWatermark}\")\r\n  val excel_spark_reader = excel_options.foldLeft(spark.read.format(\"excel\")){case (reader, kv) => reader.option(kv._1, kv._2)}\r\n\r\n  val excelResult = excelFilesWithWatermark.map{case (excel_fp, _) =>\r\n      Try(excel_spark_reader.load(excel_fp).withColumn(\"file_name\", input_file_name())) match {\r\n        case Success(df) => df\r\n        case Failure(ex) => println(s\"Failed to read execel file: $excel_fp\")\r\n        throw ex\r\n      }\r\n  }.reduce(_ union _)\r\n\r\n  val cnt = excelResult.count()\r\n  if(cnt > 0){\r\n    spark.conf.set(\"new_data_flag\", \"true\")\r\n  }\r\n  println(s\"Total records from excel sources: ${cnt}\")\r\n  excelResult\r\n}\r\n",
+        "scriptMethodHeader" : "def apply(spark: SparkSession): DataFrame = {",
+        "scriptMethodFooter" : "    out0\n}"
+      }
+    },
+    "nFIFy063_Vu0E_T9NTltp$$D8W4C8-8chxsXN4atcTyV" : {
+      "id" : "nFIFy063_Vu0E_T9NTltp$$D8W4C8-8chxsXN4atcTyV",
+      "component" : "Script",
+      "metadata" : {
+        "label" : "write_delta",
+        "slug" : "write_delta",
+        "x" : 520,
+        "y" : 120,
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false,
+        "isImported" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "8BCz9sNVAp0AynhdJgvzv$$gEQIcq5Vwf6kNGlv1n7qq",
+          "slug" : "in0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ ]
+          },
+          "isStreaming" : false
+        } ],
+        "outputs" : [ {
+          "id" : "h0-as2cRwyhfN2DaN9KR3$$WG6Z8NYlEoXseHCZA2mk8",
+          "slug" : "out0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ ]
+          },
+          "isStreaming" : false
+        } ],
+        "selectedInputFields" : [ ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : false
+      },
+      "properties" : {
+        "script" : "import org.apache.spark.sql.functions._\r\n\r\nif(List(\"_1\", \"_2\") != in0.columns.toList) {\r\n  in0.withColumn(\"update_timestamp\", current_timestamp).write\r\n    .format(\"delta\")\r\n    .option(\"delta.enableChangeDataFeed\", true)\r\n    .mode(\"overwrite\")\r\n    .saveAsTable(s\"${Config.target_schema}.${Config.target_table}\")\r\n}\r\n\r\nval out0 = spark.createDataFrame(Seq((\"1\", \"1\"), (\"2\", \"2\")))\r\n",
+        "scriptMethodHeader" : "def apply(spark: SparkSession, in0: DataFrame): DataFrame = {",
+        "scriptMethodFooter" : "    out0\n}"
+      }
+    },
+    "drRDHrwkLk82HIoBr-eax$$xGa60vTnHKfyWZ60LvcU5" : {
+      "id" : "drRDHrwkLk82HIoBr-eax$$xGa60vTnHKfyWZ60LvcU5",
+      "component" : "Script",
+      "metadata" : {
+        "label" : "update_inc_metadata_table",
+        "slug" : "update_inc_metadata_table",
+        "x" : 720,
+        "y" : 120,
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false,
+        "isImported" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "a2N6sVpT4EP7eodeChSMa$$xiSkzcgf-v1YNXBH0wOHZ",
+          "slug" : "in0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ ]
+          },
+          "isStreaming" : false
+        } ],
+        "outputs" : [ ],
+        "selectedInputFields" : [ ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : false
+      },
+      "properties" : {
+        "script" : "\r\nif (Config.read_incremental_files_flag == true && spark.conf.get(\"new_data_flag\", \"\") == \"true\") {\r\n\r\n  println(\"Updating incremental metadata table\")\r\n  import _root_.io.delta.tables._\r\n  import spark.implicits._\r\n  val metaColumns = Seq(\"data_mart\", \"pipeline_name\", \"source\", \"target\", \"last_process_timestamp\")\r\n\r\n  val metaDataDf =  spark.createDataFrame(Seq((Config.data_mart, Config.pipeline_name,\r\n    Config.source_name,  Config.target_table, spark.conf.get(\"max_processed_file_timestamp\")))).toDF(metaColumns: _*)\r\n\r\n\r\n  if (!spark.catalog.tableExists(Config.incremental_load_metadata_table)) {\r\n    metaDataDf.write\r\n      .format(\"delta\")\r\n      .mode(\"overwrite\")\r\n      .partitionBy(\"pipeline_name\")\r\n      .saveAsTable(Config.incremental_load_metadata_table)\r\n  } else {\r\n    DeltaTable\r\n      .forName(Config.incremental_load_metadata_table)\r\n      .as(\"target\")\r\n      .merge(\r\n        metaDataDf.as(\"source\"),\r\n        (col(\"target.`pipeline_name`\") === lit(Config.pipeline_name)) &&\r\n         (col(\"source.`target`\") === col(\"target.`target`\"))\r\n      )\r\n      .whenMatched()\r\n      .updateAll()\r\n      .whenNotMatched()\r\n      .insertAll()\r\n      .execute()\r\n  }\r\n}\r\n",
+        "scriptMethodHeader" : "def apply(spark: SparkSession, in0: DataFrame): Unit = {",
+        "scriptMethodFooter" : "    \n}"
+      }
+    },
+    "Nyw2ZfbxahilSs3MHmWsW$$2OurB7JEK3Ls8JkgUy0IF" : {
+      "id" : "Nyw2ZfbxahilSs3MHmWsW$$2OurB7JEK3Ls8JkgUy0IF",
+      "component" : "Script",
+      "metadata" : {
+        "label" : "header_standardization",
+        "slug" : "header_standardization",
+        "x" : 320,
+        "y" : 120,
+        "phase" : 0,
+        "cache" : false,
+        "detailedStats" : false,
+        "isImported" : false
+      },
+      "ports" : {
+        "inputs" : [ {
+          "id" : "rN6IuUCcDYwFKL3T-AmXW$$Qaj8eneLdK15N609pqlAJ",
+          "slug" : "in0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ ]
+          },
+          "isStreaming" : false
+        } ],
+        "outputs" : [ {
+          "id" : "fkPaJ5NZRsH4UeNSKQcRB$$BjTGC-Bc0ArPsedAYu58R",
+          "slug" : "out0",
+          "schema" : {
+            "type" : "struct",
+            "fields" : [ ]
+          },
+          "isStreaming" : false
+        } ],
+        "selectedInputFields" : [ ],
+        "isCustomOutputSchema" : true,
+        "autoUpdateOnRun" : false
+      },
+      "properties" : {
+        "script" : "val newHeaders = in0.columns\r\n.map{c =>\r\n    s\"`$c` ${c.toLowerCase.replaceAll(\"[^a-z\\\\d\\\\s]\", \"_\").trim().replaceAll(\"[\\\\s]+\", \"_\")}\"\r\n}\r\n\r\nval out0 = in0.selectExpr(newHeaders:_*)",
+        "scriptMethodHeader" : "def apply(spark: SparkSession, in0: DataFrame): DataFrame = {",
+        "scriptMethodFooter" : "    out0\n}"
+      }
+    }
+  },
+  "ports" : {
+    "inputs" : [ ],
+    "outputs" : [ ],
+    "selectedInputFields" : [ ],
+    "isCustomOutputSchema" : false,
+    "autoUpdateOnRun" : false
+  },
+  "diagnostics" : [ {
+    "property" : "$.workflow.processes.ni81tduIxsYIaElALf51m$$Alq15m70d6RuzfcIVC4sS.ports.outputs",
+    "range" : {
+      "start" : {
+        "line" : 0,
+        "character" : 0
+      },
+      "end" : {
+        "line" : 0,
+        "character" : 0
+      }
+    },
+    "severity" : 3,
+    "message" : "Please infer output schema from the cluster",
+    "tags" : [ ],
+    "relatedInformation" : [ ]
+  }, {
+    "property" : "$.workflow.processes.ni81tduIxsYIaElALf51m$$Alq15m70d6RuzfcIVC4sS.properties.script",
+    "range" : {
+      "start" : {
+        "line" : 0,
+        "character" : 0
+      },
+      "end" : {
+        "line" : 0,
+        "character" : 0
+      }
+    },
+    "severity" : 1,
+    "message" : "Code parsing error: <input>:10: error: expected class or object definition val\nval formatter = DateTimeFormatter.ofPattern(Config.incremental_col_format).withZone(ZoneId.of(\"America/Chicago\"))\n^",
+    "tags" : [ ],
+    "relatedInformation" : [ ]
+  }, {
+    "property" : "$.workflow.processes.Nyw2ZfbxahilSs3MHmWsW$$2OurB7JEK3Ls8JkgUy0IF",
+    "range" : {
+      "start" : {
+        "line" : 0,
+        "character" : 0
+      },
+      "end" : {
+        "line" : 0,
+        "character" : 0
+      }
+    },
+    "severity" : 1,
+    "message" : "One of the upstream gems is broken. Please, fix it first.",
+    "tags" : [ ],
+    "relatedInformation" : [ ]
+  }, {
+    "property" : "$.workflow.processes.nFIFy063_Vu0E_T9NTltp$$D8W4C8-8chxsXN4atcTyV",
+    "range" : {
+      "start" : {
+        "line" : 0,
+        "character" : 0
+      },
+      "end" : {
+        "line" : 0,
+        "character" : 0
+      }
+    },
+    "severity" : 1,
+    "message" : "One of the upstream gems is broken. Please, fix it first.",
+    "tags" : [ ],
+    "relatedInformation" : [ ]
+  }, {
+    "property" : "$.workflow.processes.drRDHrwkLk82HIoBr-eax$$xGa60vTnHKfyWZ60LvcU5",
+    "range" : {
+      "start" : {
+        "line" : 0,
+        "character" : 0
+      },
+      "end" : {
+        "line" : 0,
+        "character" : 0
+      }
+    },
+    "severity" : 1,
+    "message" : "One of the upstream gems is broken. Please, fix it first.",
+    "tags" : [ ],
+    "relatedInformation" : [ ]
+  } ]
+}
