@@ -1,0 +1,17 @@
+Gems Explanations
+Summary
+This code contains three objects that work together to read data from Excel files, standardize column headers, and write the data to a Delta table. The `read_source_excel` object reads Excel files from a specified location and returns a DataFrame. The `header_standardization` object standardizes the column headers of the input DataFrame to lowercase and replaces any non-alphanumeric characters with underscores. The `write_delta` object writes the standardized DataFrame to a Delta table. Additionally, the `update_inc_metadata_table` object updates an incremental load metadata table with information about the latest data load. This code can be used to automate the process of reading and processing data from Excel files and writing it to a Delta table for further analysis.
+
+Detailed Description
+write_delta
+This gem writes data to a Delta Lake table with change data feed enabled. If the input DataFrame has columns "_1" and "_2", it overwrites the target table with the input data and adds an "update_timestamp" column with the current timestamp. If the input DataFrame does not have columns "_1" and "_2", it returns a DataFrame with two rows of hardcoded data. This gem could be used for real-time data ingestion and processing, and for enabling change data capture for downstream applications.
+
+update_inc_metadata_table
+This gem updates the metadata table for incremental loading of data. It checks if the flag for reading incremental files is set to true and if there is new data available. If so, it creates a DataFrame with metadata information such as data mart, pipeline name, source, target, and last process timestamp. It then uses DeltaTable to merge this DataFrame with the existing metadata table, updating existing records and inserting new ones as needed. This ensures that the metadata table accurately reflects the latest state of the data being loaded.
+
+header_standardization
+This gem standardizes the headers of a DataFrame by converting them to lowercase, replacing any non-alphanumeric characters with underscores, and removing any extra spaces. This can improve data consistency and make it easier to work with the DataFrame in downstream processes.
+
+read_source_excel
+This gem reads Excel files from a specified location and loads them into a Spark DataFrame. It supports incremental loading by filtering files based on a timestamp pattern and a cutoff date. It also allows for custom Excel options to be passed in as a configuration. The resulting DataFrame includes a file_name column to track the source file for each record. The gem also updates a metadata table with the last processed timestamp for the pipeline and target table, enabling future incremental loads.
+
