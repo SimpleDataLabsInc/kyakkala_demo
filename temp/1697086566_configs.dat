@@ -59,3 +59,29 @@ ghp_CqFc6aIm0m4dlmUdmw1xh2gqw9tSNr12OvF
   "sk_service_self_join": "false",
   "optional_sk_config": "sks=[\n  {\n    \"table-name\": \"l_admin_route\",\n    \"sk-col\": \"admin_rte_sk\",\n    \"nk-col\": [\n      \"agdicd\"\n    ]\n  },\n  {\n    \"table-name\": \"l_ahfs\",\n    \"sk-col\": \"ahfs_cd_sk\",\n    \"nk-col\": [\n      \"agebc4\"\n    ]\n  },\n  {\n    \"table-name\": \"l_dea\",\n    \"sk-col\": \"dea_cd_sk\",\n    \"nk-col\": [\n      \"agddea\"\n    ]\n  },\n  {\n    \"table-name\": \"d_drug\",\n    \"sk-col\": \"drug_sk\",\n    \"nk-col\": [\n      \"substring(agqihb, 0, 10)\"\n    ]\n  },\n  {\n    \"table-name\": \"l_drug_maintenance\",\n    \"sk-col\": \"drug_maint_cd_sk\",\n    \"nk-col\": [\n      \"agmdcd\"\n    ]\n  },\n  {\n    \"table-name\": \"l_drug_otc_indicator\",\n    \"sk-col\": \"drug_rx_otc_ind_sk\",\n    \"nk-col\": [\n      \"agdrxo\"\n    ]\n  },\n  {\n    \"table-name\": \"l_dosage_form\",\n    \"sk-col\": \"dsg_frm_sk\",\n    \"nk-col\": [\n      \"agdhcd\"\n    ]\n  },\n  {\n    \"table-name\": \"l_generic_medispan_indicator\",\n    \"sk-col\": \"gnrc_ind_sk\",\n    \"nk-col\": [\n      \"agzxst\"\n    ]\n  },\n  {\n    \"table-name\": \"l_generic_medispan_indicator\",\n    \"sk-col\": \"gnrc_mdspn_ind_sk\",\n    \"nk-col\": [\n      \"agozs3\"\n    ]\n  },\n  {\n    \"table-name\": \"d_gpi\",\n    \"sk-col\": \"gpi_sk\",\n    \"nk-col\": [\n      \"agqihb\"\n    ]\n  },\n  {\n    \"table-name\": \"d_product\",\n    \"sk-col\": \"prod_sk\",\n    \"nk-col\": [\n      \"agr9c4\",\n      \"agi5cj\"\n    ]\n  },\n  {\n    \"table-name\": \"rcecip\",\n    \"sk-col\": \"claim_nbr\",\n    \"nk-col\": [\n      \"CAST(agp2nb AS DECIMAL(17,0))\",\n      \"CASE WHEN (CAST(ags6nb AS DECIMAL(5,0)) < 0) THEN CAST(ags6nb AS DECIMAL(5,0)) ELSE (1000 - CAST(ags6nb AS DECIMAL(5,0))) END\",\n      \"agzsst\",\n      \"CAST(dxf_src_sys_id AS INT)\",\n      \"src_env_sk\"\n    ]\n  }\n]"
 }
+
+
+-----------------orx_l_formulary_client_xref-------------------
+{
+  "final_table_schema": "{\"client_xref_sk\": \"long\", \"client_id\": \"string\", \"client_desc\": \"string\", \"src_env_sk\": \"long\", \"rec_stat_cd\": \"short\", \"run_id\": \"long\", \"update_uid\": \"string\", \"update_ts\": \"timestamp\", \"insert_uid\": \"string\", \"insert_ts\": \"timestamp\"}",
+  "pipeline_name": "orx_l_formulary_client_xref",
+  "primary_key": "client_id",
+  "reformat_rules": "{\n  \"client_id\" : \"client_id\",\n  \"src_env_sk\" : \"CAST(CASE WHEN (table_schem = 'USRCLMXRF') THEN 480 ELSE 490 END AS DECIMAL(38,0))\",\n  \"client_desc\" : \"'-'\",\n  \"client_xref_sk\" : \"-1\"\n}",
+  "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
+  "source_table": "",
+  "target_table": "l_formulary_client_xref",
+  "sk_service_col": "client_xref_sk",
+  "read_incremental_files_flag": "false"
+}
+-----------------ctrx_l_formulary_client_xref-------------------
+{
+  "final_table_schema": "{\"client_xref_sk\": \"long\", \"client_id\": \"string\", \"client_desc\": \"string\", \"src_env_sk\": \"long\", \"rec_stat_cd\": \"short\", \"run_id\": \"long\", \"update_uid\": \"string\", \"update_ts\": \"timestamp\", \"insert_uid\": \"string\", \"insert_ts\": \"timestamp\"}",
+  "pipeline_name": "ctrx_l_formulary_client_xref",
+  "primary_key": "client_id",
+  "reformat_rules": "{\n  \"client_id\" : \"client_id\",\n  \"src_env_sk\" : \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\",\n  \"client_desc\" : \"'-'\",\n  \"client_xref_sk\" : \"-1\"\n}",
+  "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
+  "source_table": "",
+  "target_table": "l_formulary_client_xref",
+  "sk_service_col": "client_xref_sk",
+  "read_incremental_files_flag": "false"
+}
