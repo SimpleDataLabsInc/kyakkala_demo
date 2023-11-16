@@ -85,3 +85,16 @@ ghp_CqFc6aIm0m4dlmUdmw1xh2gqw9tSNr12OvF
   "sk_service_col": "client_xref_sk",
   "read_incremental_files_flag": "false"
 }
+-----------------d_reporting_client_map-------------------
+{
+    "final_table_schema" : "{\"rptg_clt_id\": \"int\",\n\"rptg_clt_nm\": \"string\",\n\"cag_sk\": \"long\",\n\"carrier_id\": \"string\",\n\"account_id\": \"string\",\n\"employer_group_id\": \"string\",\n\"eff_dt\": \"date\",\n\"bk_of_bsns\": \"string\",\n\"mbr_dtl_flg\": \"string\",\n\"src_env_sk\": \"long\",\n\"rec_stat_cd\": \"short\",\n\"run_id\": \"long\",\n\"update_uid\": \"string\",\n\"update_ts\": \"timestamp\",\n\"insert_uid\": \"string\",\n\"insert_ts\": \"timestamp\"}",
+    "length_rules" : "CASE WHEN (length(rptg_clt_nm) > 100) THEN 'rptg_clt_nm' WHEN (length(carrier_id) > 30) THEN 'carrier_id' WHEN (length(account_id) > 40) THEN 'account_id' WHEN (length(employer_group_id) > 30) THEN 'employer_group_id' WHEN (length(eff_dt) > 8) THEN 'eff_dt' WHEN (length(bk_of_bsns) > 30) THEN 'bk_of_bsns' WHEN (length(mbr_dtl_flg) > 1) THEN 'mbr_dtl_flg'  ELSE 'pass' END",
+    "optional_filter_rules" : "CAST(CASE WHEN (account_id = '*') THEN 1 WHEN ((account_id = cag_account_id) AND (employer_group_id = '*')) THEN 1 WHEN ((account_id = cag_account_id) AND (employer_group_id = cag_employer_group_id)) THEN 1 ELSE 0 END AS BOOLEAN)",
+    "pipeline_name" : "d_reporting_client_map",
+    "primary_key" : "",
+    "reformat_rules" : "{\n  \"eff_dt\" : \"date_format(to_date(effective_date, 'MM/dd/yyyy'), 'yyyyMMdd')\",\n  \"cag_sk\" : \"CAST(cag_sk AS DECIMAL(38,0))\",\n  \"bk_of_bsns\" : \"bk_of_busines\",\n  \"account_id\" : \"cag_account_id\",\n  \"rptg_clt_nm\" : \"client_name\",\n  \"mbr_dtl_flg\" : \"mbr_dtl_flg\",\n  \"carrier_id\" : \"cag_carrier_id\",\n  \"employer_group_id\" : \"cag_employer_group_id\",\n  \"rptg_clt_id\" : \"CAST(dxf_sk0 AS DECIMAL(38,0))\",\n  \"src_env_sk\" : \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\"\n}",
+    "reformat_rules_join" : "joins = [\n    {\n       \"fmt\": \"csv\",\n       \"src\": \"/{AI_SERIAL_LOOKUP}/lookup.rxclaim/lookup.rxclaim.d_reporting_client_map_enrich.d_reporting_client_map_lkp.dat\",\n       \"join-cond\": \"in1.rptg_clt_nm = in0.client_name\",\n       \"val-cols\": [\n         \"in1.dxf_sk AS dxf_sk0\"\n       ]\n    }\n]",
+    "source_path" : "srcs = [{\n    \"fmt\" : \"parquet\",\n    \"src\" : \"dbfs:/PATH/*\"\n}]",
+    "source_table" : "",
+    "target_table" : ""
+}
