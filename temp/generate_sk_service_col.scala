@@ -37,13 +37,12 @@ object generate_sk_service_col {
     val api_header_key =
       dbutils.secrets.get(scope = Config.api_scope, key = Config.api_key)
 
-    case class PkSkGen(pks_sks: String, sk_value: String, p_flag: String)
+    // case class PkSkGen(pks_sks: String, sk_value: String, p_flag: String)
 
     println("inside generate get_sk...") //todo
     case class SKDef(tableName: String, skCol: String, nkCol: List[String])
     case class SKService(sks: List[SKDef])
 
-    //case class PkSkGen(pks_sks: String, sk_value: String, p_flag: String)
 
     def jsonStrToMap(jsonStr: String): Map[String, Any] = {
       implicit val formats = DefaultFormats
@@ -76,9 +75,9 @@ object generate_sk_service_col {
       val response = (HttpClientBuilder.create().build()).execute(post)
       val status_code = response.getStatusLine().getStatusCode()
 
-      if (status_code == 206){
+      if (status_code == 206) {
         println("Partial results got returned. Please connect with admin and check SK service memory. It should be less than 70 percent.")
-      }else if (status_code == 429) {
+      } else if (status_code == 429) {
         Thread.sleep(60000)
         get_sk_values_response(pipeline_name, pk_to_find, post_url)
       }
@@ -89,7 +88,7 @@ object generate_sk_service_col {
       response_str
     }
 
-    def get_sk_values(response: String, post_url: String): List[PkSkGen] = {
+    def get_sk_values(response: String, post_url: String): List[(String, String, String)] = {
       var a = ""
       var b = ""
       var c = ""
@@ -101,9 +100,8 @@ object generate_sk_service_col {
             a = k
             b = v.asInstanceOf[Map[String, Any]].get("value").get.asInstanceOf[scala.math.BigInt].toString
             c = v.asInstanceOf[Map[String, Any]].get("generated").get.asInstanceOf[Boolean].toString
-            PkSkGen(a, b, c)
+            (a, b, c)
         }
-
       // println("pk_sk_values: " + pk_sk_values)
       pk_sk_values.toList
     }
@@ -131,10 +129,10 @@ object generate_sk_service_col {
         val pipeline_name = Config.pipeline_name
         val partitionCount = temp_df.rdd.getNumPartitions
 
-        val sk_outputs_parts = (0 until partitionCount).map{i =>
-          print(s"Generating sks for partition:$i/$partitionCount")
-          temp_df.rdd.mapPartitionsWithIndex{(idx, partitionRows) =>
-            if(i == idx) {
+        print(s"Generating sks with $partitionCount partitions for ${temp_df.count}")
+        val sk_outputs_parts = (0 until partitionCount).map { i =>
+          temp_df.rdd.mapPartitionsWithIndex { (idx, partitionRows) =>
+            if (i == idx) {
               var while_count = 0
               partitionRows.grouped(sk_service_batch_size)
                 .flatMap { rowGroup =>
@@ -159,9 +157,9 @@ object generate_sk_service_col {
                       )
                     }
                   }
-                  sk_response_output.map(res => (res.pks_sks, res.sk_value, res.p_flag))
+                  sk_response_output
                 }
-            } else Iterator.empty[(String, String, String)]
+            } else Iterator[(String, String, String)]()
           }
         }
 
