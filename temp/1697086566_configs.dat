@@ -117,3 +117,14 @@ ghp_CqFc6aIm0m4dlmUdmw1xh2gqw9tSNr12OvF
   "sk_service_self_join": "false",
   "optional_sk_config": "sks=[\n  {\n    \"table-name\": \"d_cag\",\n    \"sk-col\": \"cag_sk\",\n    \"nk-col\": [\n      \"carrier\",\n      \"account\",\n      \"group\"\n    ]\n  },\n  {\n    \"table-name\": \"d_member\",\n    \"sk-col\": \"mbr_sk\",\n    \"nk-col\": [\n      \"carrier\",\n      \"account\",\n      \"group\",\n      \"member_id\"\n    ]\n  }\n]"
 }
+---------
+{
+    "final_table_schema" : "{\"mmr_sum_sk\": \"long\",\n\"carrier_id\": \"string\",\n\"adj_start_dt\": \"date\",\n\"adj_end_dt\": \"date\",\n\"mmr_mnth\": \"int\",\n\"education_fee_amt\": \"decimal(14, 2)\",\n\"cob\": \"decimal(14, 2)\",\n\"sequest_adj_amt\": \"decimal(14, 2)\",\n\"late_penalty_amt\": \"decimal(14, 2)\",\n\"total_amt\": \"decimal(14, 2)\",\n\"src_env_sk\": \"long\",\n\"rec_stat_cd\": \"short\",\n\"run_id\": \"long\",\n\"update_uid\": \"string\",\n\"update_ts\": \"timestamp\",\n\"insert_uid\": \"string\",\n\"insert_ts\": \"timestamp\"}",
+    "length_rules" : "CASE WHEN (length(carrier_id) > 10) THEN 'carrier_id' WHEN (length(adj_start_dt) > 8) THEN 'adj_start_dt' WHEN (length(adj_end_dt) > 8) THEN 'adj_end_dt' WHEN (length(education_fee_amt) > 15) THEN 'education_fee_amt' WHEN (length(cob) > 15) THEN 'cob' WHEN (length(sequest_adj_amt) > 15) THEN 'sequest_adj_amt' WHEN (length(late_penalty_amt) > 15) THEN 'late_penalty_amt' WHEN (length(total_amt) > 15) THEN 'total_amt'  ELSE 'pass' END",
+    "pipeline_name" : "a_mpd_monthly_mbrship_summary",
+    "primary_key" : "",
+    "reformat_rules" : "{\n  \"adj_start_dt\" : \"adj_start_dt\",\n  \"adj_end_dt\" : \"adj_end_dt\",\n  \"education_fee_amt\" : \"education\",\n  \"mmr_sum_sk\" : \"-1\",\n  \"mmr_mnth\" : \"CAST(substring(adj_start_dt, 0, 6) AS DECIMAL(38,0))\",\n  \"cob\" : \"cob\",\n  \"total_amt\" : \"total\",\n  \"carrier_id\" : \"carrier\",\n  \"src_env_sk\" : \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\",\n  \"sequest_adj_amt\" : \"sequestration_adj\",\n  \"late_penalty_amt\" : \"net_late_enrollment_penalty_amount\"\n}",
+    "source_path" : "srcs = [{\n    \"fmt\" : \"parquet\",\n    \"src\" : \"dbfs:/PATH/*\"\n}]",
+    "source_table" : "",
+    "target_table" : ""
+}
