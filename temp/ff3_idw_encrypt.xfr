@@ -1,0 +1,981 @@
+package ff3;
+
+/*
+                 NOTICE
+        COPYRIGHT 2020 AB INITIO
+    UNPUBLISHED -- ALL RIGHTS RESERVED
+
+    USE AND DISCLOSURE IS RESTRICTED BY CONFIDENTIALITY & LICENSE CONDITIONS
+*/
+
+// These files contain DML objects (types, variables, and transforms) that
+// users might find helpful to include and use in their projects.
+//
+// Some of these DML objects are intended strictly for internal use within
+// these files.  These objects are flagged with a structured comment containing
+// "BizHidden", and such objects can be changed in future versions without notice
+// to users.  Users should not directly reference these objects.
+//
+// The other DML objects are intended for users to reference directly in their
+// graphs and DML code. Such objects will be maintained in future releases, to
+// the extent possible. Any material changes to these objects will be documented
+// to inform users.
+
+////////////////////////////////////////////////
+// Begin section concerned with FF3-1 encryption.
+////////////////////////////////////////////////
+
+// This named DML package is an implementation of the FF3-1 format-preserving
+// encryption algorithm as defined in
+// https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-38Gr1-draft.pdf .
+//
+// The primary entry points are:
+//
+//   ff3.encrypt(plaintext, alphabet, key, [tweak])
+//   ff3.decrypt(ciphertext, alphabet, key, [tweak])
+//   ff3.encrypt_preserving_format(plaintext)
+//   ff3.decrypt_preserving_format(ciphertext)
+//
+// The output of these two functions, along with their inputs "plaintext",
+// "ciphertext", and "alphabet", are defined to be of type ff3.ff3_string_t.
+
+
+/*@ BizHidden @*/
+type uint1_t = unsigned integer(1);
+/*@ BizHidden @*/
+type uint4_t = unsigned int;
+/*@ BizHidden @*/
+type uint8_t = unsigned long;
+
+/*@ BizHidden @*/
+constant uint8_t two_to_32 = (1<<32);
+/*@ BizHidden @*/
+constant uint8_t low32 = two_to_32 -1;
+
+// This is the type that the FF3 algorithm operates on
+/*@
+  BizCategoryInternalId:DCF_cat_security_type
+  BizCommentInternalId:DCF_type_ff3_string_t
+@*/
+type ff3_string_t = string(int, charset="iso-8859-1");
+
+// This implementation supports a base of any value. It contains performance optimizations for
+// commonly used bases:
+//     10 (digits)
+//     26 (lowercase characters)
+//     62 (alphanumeric characters)
+//     95 (all ASCII printable characters)
+
+// Precomputed powers of commonly used bases
+/*@ BizHidden @*/
+constant uint8_t[19] powers_of_10 = [vector 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000,
+                                      100000000, 1000000000, 10000000000, 100000000000,
+                                      1000000000000, 10000000000000, 100000000000000,
+                                      1000000000000000, 10000000000000000, 100000000000000000,
+                                      1000000000000000000];
+
+/*@ BizHidden @*/
+constant uint8_t[14] powers_of_26 = [vector 1, 26, 676, 17576, 456976, 11881376, 308915776,
+                                      8031810176, 208827064576, 5429503678976, 141167095653376,
+                                      3670344486987776, 95428956661682176, 2481152873203736576];
+
+/*@ BizHidden @*/
+constant uint8_t[11] powers_of_62 = [vector 1, 62, 3844, 238328, 14776336, 916132832, 56800235584,
+                                      3521614606208, 218340105584896, 13537086546263552,
+                                      839299365868340224];
+
+/*@ BizHidden @*/
+constant uint8_t[10] powers_of_95 = [vector 1, 95, 9025, 857375, 81450625, 7737809375, 735091890625,
+                                      69833729609375, 6634204312890625, 630249409724609375];
+
+// Most math is done with this representation, for some implicit modulus M,
+// i.e. an integer x is represented by x = q*M+r .
+// Commonly M is 10^18 or 26^13 or 62^10 or 95^9.
+/*@ BizHidden @*/
+type quot_rem_t =
+record
+  uint8_t quotient;
+  uint8_t remainder;
+end;
+
+// Sometimes it is necessary to represent x in three 64-bit integers--i.e. "big
+// digits" modulo 2^32. With this representation any digit can be multiplied by
+// another digit and the answer fits in 8 bytes.
+/*@ BizHidden @*/
+type bignum_t =
+record
+  uint8_t low;
+  uint8_t mid;
+  uint8_t high;
+end;
+
+// When storing x<2^96 as a byte sequence, we use the following notation.
+/*@ BizHidden @*/
+type bignum_to_bytes_t =
+record
+  unsigned little endian integer(4) low;
+  unsigned little endian integer(4) mid;
+  unsigned little endian integer(4) high;
+end;
+
+// The 8-byte tweak is used in two 4-byte halves.
+/*@ BizHidden @*/
+type tweak_t =
+record
+  void(4) left4;
+  void(4) right4;
+end;
+
+// Computes floor(63*log(2)/log(radix)), with precomputed values for
+// common radices.
+/*@ BizHidden @*/
+int out :: log_modulus(int radix) inline =
+begin
+  out :: switch (radix)
+    case 10 : 18;
+    case 26 : 13;
+    case 62 : 10;
+    case 95 : 9;
+    default : (int)(63.0*math_log(2)/math_log(radix));
+  end;
+end;
+
+// Computes radix^e, with precomputed values for common radices.
+/*@ BizHidden @*/
+uint8_t out :: get_power(int radix, int e) inline =
+begin
+  out :: switch (radix)
+    case 10 : powers_of_10[e];
+    case 26 : powers_of_26[e];
+    case 62 : powers_of_62[e];
+    case 95 : powers_of_95[e];
+    default : (uint8_t)math_pow(radix, e);
+  end;
+end;
+
+// Computes 2*floor(96*log(2)/log(radix)), with precomputed values for
+// common radices.
+/*@ BizHidden @*/
+int out :: get_max_input_len_per_block(int radix) inline =
+begin
+  out :: switch(radix)
+    case 10 : 56;
+    case 26 : 40;
+    case 62 : 32;
+    case 95 : 28;
+    default : 2 * (int)(96.0*math_log(2)/math_log(radix));
+  end;
+end;
+
+/*@ BizHidden @*/
+void(12) out :: bignum_to_bytes(bignum_t x) inline =
+begin
+  out :: reinterpret((bignum_to_bytes_t) x);
+end;
+
+/*@ BizHidden @*/
+bignum_t out::uint8_to_bignum(x) inline =
+begin
+  out :: [record low (x&low32) mid (x>>32) high 0];
+end;
+
+/*@ BizHidden @*/
+void(4) out :: rev4(void(4) in) inline =
+begin
+  out :: reinterpret((unsigned little endian integer(4)) reinterpret_as(unsigned big endian integer(4), in));
+end;
+
+/*@ BizHidden @*/
+void(4) out :: rev4_offset(void(4) in, int i) inline =
+begin
+  out :: reinterpret((unsigned little endian integer(4)) ((reinterpret_as(unsigned big endian integer(4), in))^i));
+end;
+
+// The input 'in' is a vector whose length must be a multiple of 4.
+/*@ BizHidden @*/
+void(int) out :: rev(void(int) in) inline =
+begin
+  let int n = length_of(in)/4;
+  let void(4)[n] vec = reinterpret(in, 4);
+  out :: for (let i, i<n) : rev4(vec[n-1-i]);
+end;
+
+// c is expected to be 4 bytes only, so multiplications can happen in a uint8.
+// bignum is expected to have high = 0.
+/*@ BizHidden @*/
+bignum_t out::mulc(bignum_t bignum, uint8_t c) inline =
+begin
+  let uint8_t low = c * bignum.low;
+  let uint8_t carry = low>>32;
+  let uint8_t mid = c * bignum.mid + carry;
+  carry = mid>>32;
+  low = low & low32;
+  mid = mid & low32;
+  out :: [record low low mid mid high carry];
+end;
+
+/*@ BizHidden @*/
+uint8_t out::sub_small_diff(uint8_t alow, uint8_t amid, uint8_t blow, uint8_t bmid) inline =
+begin
+  let uint8_t carry = (alow < blow);
+  let uint8_t low = carry ? two_to_32 : 0;
+  let uint8_t mid = (amid < bmid + carry) ? two_to_32 : 0;
+  low = low + alow - blow;
+  mid = mid + amid - bmid - carry;
+  out :: (mid<<32) + low;
+end;
+
+/*@ BizHidden @*/
+quot_rem_t out :: mod(quot_rem_t qr, int radix, int len, int mlen) inline =
+begin
+  out :: (len<=mlen) ?
+    [record quotient 0 remainder qr.remainder%get_power(radix, len)] :
+    [record quotient qr.quotient%get_power(radix, len-mlen), remainder qr.remainder];
+end;
+
+// a+b mod radix^len
+/*@ BizHidden @*/
+quot_rem_t out :: mdlr_add_qr(quot_rem_t a, quot_rem_t b, int radix, int len, int mlen,
+                               uint8_t modulus) inline =
+begin
+  let uint8_t remainder = a.remainder + b.remainder;
+  let uint8_t carry = remainder/modulus;
+  // where a, b << 1/2 modulus^2 < 2^128 so no wrapping happens in the quotient
+  let quot_rem_t sum = [record quotient (a.quotient + b.quotient + carry)
+                               remainder remainder%modulus];
+  out :: mod(sum, radix, len, mlen);
+end;
+
+// -a mod radix^len
+// where a is assumed to already be reduced mod radix^len
+/*@ BizHidden @*/
+quot_rem_t out :: mdlr_negate_qr(quot_rem_t a, int radix, int len, int mlen,
+                                  uint8_t modulus) inline =
+begin
+  // handle the case of a.remainder == 0 first
+  let quot_rem_t res = (len>mlen and a.remainder == 0) ?
+    [record quotient (get_power(radix, len-mlen)-a.quotient) remainder 0] :
+    [record quotient 0 remainder 0];
+  // if a.remainder>0 we will either borrow from the quotient, or simply subtract from radix^len
+  if (a.remainder>0) res = (len<=mlen) ?
+    [record quotient 0 remainder (get_power(radix, len) - a.remainder)] :
+    [record quotient (get_power(radix, len-mlen)-1-a.quotient) remainder (modulus - a.remainder)];
+  out :: res;
+end;
+
+// a-b mod radix^len
+/*@ BizHidden @*/
+quot_rem_t out :: mdlr_sub_qr(quot_rem_t a, quot_rem_t b, int radix, int len, int mlen,
+                              uint8_t modulus) inline =
+begin
+  out :: mdlr_add_qr(a, mdlr_negate_qr(b, radix, len, mlen, modulus), radix, len, mlen, modulus);
+end;
+
+// The returned quotient and remainder typically require 8 bytes
+/*@ BizHidden @*/
+quot_rem_t out :: big_div(void(16) in, uint8_t modulus) inline =
+begin
+  // lowest = x[0], highest = x[3]
+  let unsigned little endian integer(4)[4] x = reinterpret(in);
+  // we will call div 3 times; first on the high order 12 bytes
+  let quot_rem_t qr0 = div(x[1], x[2], x[3], modulus);
+  // then bring in bring in the low order 4 bytes
+  let quot_rem_t qr1 = div(x[0], (qr0.remainder&low32),(qr0.remainder>>32), modulus);
+  // qr[1].remainder is correct answer modulo modulus; just need to calculate the
+  // correct quotient
+  let uint8_t low = qr1.quotient&low32;
+  let uint8_t mid = (qr1.quotient>>32)+(qr0.quotient&low32);
+  let uint8_t carry = mid>>32;
+  let uint8_t high = (qr0.quotient>>32) + carry;
+  let quot_rem_t qr2 = allocate_with_defaults();
+  mid = mid&low32;
+  qr2 = div(low, mid, high, modulus);
+  out :: [record quotient qr2.remainder remainder qr1.remainder];
+end;
+
+// Modulus is large, so result can fit in uint8_t
+// typically modulus < 5 bytes
+/*@ BizHidden @*/
+quot_rem_t out :: div(uint8_t ilow, uint8_t imid, uint8_t ihigh, uint8_t modulus) inline =
+begin
+  //let uint8_t high8 = (bignum.high<<32)+bignum.mid;
+  let uint8_t high8 = (ihigh<<32)+imid;
+  // digit1 is small when modulus  is close to 2^64
+  let uint8_t digit1 = high8/modulus;
+  let uint8_t r = high8-digit1*modulus;
+  let uint8_t high = r>>32;
+  let uint8_t mid = r&low32;
+  let uint8_t m2 = 1+(modulus>>32);
+  let uint8_t digit2 = r/m2;
+  let bignum_t approx = mulc(uint8_to_bignum(modulus), digit2);
+  let uint8_t diff = sub_small_diff(ilow, mid, approx.low, approx.mid);
+  if (diff >= modulus) begin
+    // this will be 1 if modulus is close to 2^64; larger otherwise
+    let uint8_t fix = diff/modulus;
+    digit2 = digit2 + fix;
+    diff = diff - fix*modulus;
+  end;
+  out :: [record quotient ((digit1<<32)+digit2) remainder diff];
+end;
+
+// this is the opposite of the div function
+/*@ BizHidden @*/
+bignum_t out :: inv_div(quot_rem_t x, uint8_t modulus) inline =
+begin
+  let uint8_t low = 0;
+  let uint8_t mid = 0;
+  let uint8_t high = 0;
+  let uint8_t carry = 0;
+  let uint8_t digit1 = x.quotient>>32;
+  let uint8_t digit2 = x.quotient&low32;
+  let bignum_t bn_modulus = uint8_to_bignum(modulus);
+  // bn1.high is necessarily 0
+  let bignum_t bn1 = mulc(bn_modulus, digit1);
+  let bignum_t bn2 = mulc(bn_modulus, digit2);
+  low = (x.remainder&low32) + bn2.low;
+  carry = low>>32;
+  low = low&low32;
+  mid = (x.remainder>>32) + bn2.mid + bn1.low + carry;
+  carry = mid>>32;
+  mid = mid&low32;
+  high = bn2.high + bn1.mid + carry;
+  out :: [record low low mid mid high high];
+end;
+
+/*@ BizHidden @*/
+integer(1)[int] out :: uint8_to_digits(uint8_t x, int radix, int len) inline =
+begin
+  let integer(1)[int] vec = allocate_with_defaults();
+  let uint8_t y = x;
+  for (let i, i<len) begin
+    let integer(1) digit = y%radix;
+    y = (y-digit)/radix;
+    vec = vector_append(vec, digit);
+  end;
+  out :: vec;
+end;
+
+/*@ BizHidden @*/
+uint8_t out :: digits_to_uint8(integer(1)[int] digits, int radix) inline =
+begin
+  let int n = length_of(digits);
+  let uint8_t res = 0;
+  for (let i, i<n) res = res*radix + digits[n-1-i];
+  out :: res;
+end;
+
+/*@ BizHidden @*/
+integer(1)[int] out :: qr_to_digits(quot_rem_t x, int radix, int len, int mlen) inline =
+begin
+  let integer(1)[int] vec = allocate_with_defaults();
+  if (len<=mlen) vec = uint8_to_digits(x.remainder, radix, len);
+  else vec = vector_concat(uint8_to_digits(x.remainder, radix, mlen),
+                           uint8_to_digits(x.quotient, radix, len-mlen));
+  out :: vec;
+end;
+
+/*@ BizHidden @*/
+quot_rem_t out :: digits_to_qr(integer(1)[int] digits, int radix, int mlen) inline =
+begin
+  let uint8_t remainder = digits_to_uint8(digits[0:mlen], radix);
+  let uint8_t quotient = digits_to_uint8(digits[mlen:], radix);
+  out :: [record quotient quotient remainder remainder];
+end;
+
+// A mask is generated by creating pseudorandom output generated from a key, and
+// one half of the Feistel chain, and then reducing this modulo a suitable
+// modulus for the other side of the Feistel chain.
+/*@ BizHidden @*/
+quot_rem_t out :: gen_mask(quot_rem_t qr, int radix, int len, int mlen, uint8_t M, void(4) tweak,
+                           int i, void(int) aes_key) inline =
+begin
+  let bignum_t mydiv = inv_div(qr, M);
+  let void(12) xx = bignum_to_bytes(mydiv);
+  let void(4) yy = rev4_offset(tweak, i);
+  let void(16) plaintext = reinterpret([record
+      x xx
+      y yy]);
+
+  let void(16) ciphertext = encrypt_aes_simple(plaintext, aes_key);
+  let quot_rem_t qq = big_div(ciphertext, M);
+
+  out :: mod(qq, radix, len, mlen);
+end;
+
+
+// This function splits the input into a left and right half, and then applies
+// 1-block of AES 8 times in a Feistel fashion (left, right, left, etc.).  If we
+// are masking the left with AES, then the right will be used as a "tweak", etc.
+// Each application is reversible, e.g. to map a number x<26 we will add on a
+// pseudorandom mask y<26, which is computed from the RHS and a tweak. AES is used
+// to generate pseudorandom bytes rather than a hash function.
+/*@ BizHidden @*/
+integer(1)[int] out :: enc(integer(1)[int] plaintext_digits, void(int) aes_key_rev,
+                            void(8) tweak8, int radix=10) =
+begin
+  let tweak_t tweak = reinterpret(tweak8);
+  let int n = length_of(plaintext_digits);
+  let int n_left = (n%2==0) ? n/2 : (n+1)/2;
+  let int n_right = n - n_left;
+  let integer(1)[int] left =  plaintext_digits[0:n_left];
+  let integer(1)[int] right = plaintext_digits[n_left:];
+  let int mlen = log_modulus(radix);
+  let uint8_t M = get_power(radix, mlen);
+  let void(int) aes_key = rev(aes_key_rev);
+
+  // encode the input string into left_qr and right_qr
+  let quot_rem_t left_qr = digits_to_qr(left, radix, mlen);
+  let quot_rem_t right_qr = digits_to_qr(right, radix, mlen);
+
+  if (length_of(plaintext_digits)==1)
+    force_abort("FF3-1 not defined for an input vector of length 1");
+
+  for (let i, i<4) begin
+    // Mask the left number with a pseudorandom number generated from the right
+    // number, tweak and AES key.
+    let quot_rem_t mask = gen_mask(right_qr, radix, n_left, mlen, M, tweak.right4, 2*i, aes_key);
+
+    left_qr = mdlr_add_qr(left_qr, mask, radix, n_left, mlen, M);
+    mask = gen_mask(left_qr, radix, n_right, mlen, M, tweak.left4, 2*i+1, aes_key);
+    right_qr  = mdlr_add_qr(right_qr, mask, radix, n_right, mlen, M);
+  end;
+
+  // determine the masked string from left_qr and right_qr
+  left = qr_to_digits(left_qr, radix, n_left, mlen);
+  right = qr_to_digits(right_qr, radix, n_right, mlen);
+
+  out :: vector_concat(left, right);
+end;
+
+// Decryption is the opposite of encryption. That is:
+// a) we start by generating the mask from the left_qr rather than the right_qr
+// b) the counter goes 3,2,1,0 rather than 0,1,2,3
+// c) the mask is subtracted rather than added
+/*@ BizHidden @*/
+integer(1)[int] out :: dec(integer(1)[int] ciphertext_digits, void(int) aes_key_rev,
+                            void(8) tweak8, radix=10) =
+begin
+  let tweak_t tweak = reinterpret(tweak8);
+  let int n = length_of(ciphertext_digits);
+  let int n_left = (n%2==0) ? n/2 : (n+1)/2;
+  let int n_right = n - n_left;
+  let integer(1)[int] left =  ciphertext_digits[0:n_left];
+  let integer(1)[int] right = ciphertext_digits[n_left:];
+  let int mlen = log_modulus(radix);
+  let uint8_t M = get_power(radix, mlen);
+  let void(int) aes_key = rev(aes_key_rev);
+
+  // encode the input string into left_qr and right_qr
+  let quot_rem_t left_qr = digits_to_qr(left, radix, mlen);
+  let quot_rem_t right_qr = digits_to_qr(right, radix, mlen);
+
+  if (length_of(ciphertext_digits)==1)
+    force_abort("FF3-1 not defined for an input vector of length 1");
+
+  for (let i = 3, i>=0, -1) begin
+    let quot_rem_t mask = gen_mask(left_qr, radix, n_right, mlen, M, tweak.left4,
+                                   (2*i)+1, aes_key);
+
+    right_qr = mdlr_sub_qr(right_qr, mask, radix, n_right, mlen, M);
+    mask = gen_mask(right_qr, radix, n_left, mlen, M, tweak.right4, 2*i, aes_key);
+    left_qr  = mdlr_sub_qr(left_qr, mask, radix, n_left, mlen, M);
+  end;
+
+  // determine the masked string from left_qr and right_qr
+  left = qr_to_digits(left_qr, radix, n_left, mlen);
+  right = qr_to_digits(right_qr, radix, n_right, mlen);
+
+  out :: vector_concat(left, right);
+end;
+
+type tweak_hash_input_t = record
+  int i;
+  void(8) tweak;
+  integer(1)[int] start_of_ciphertext;
+  integer(1)[int] end_of_plaintext;
+end;
+
+// Generate a mask for our implementation of FF3-1 encryption for a single
+// character. This is similar to the function to generate a mask for FF3-1, except
+// we know the input is just 1 character.  Shift the tweak counter so as to make
+// these plaintexts distinct from those in gen_mask().
+/*@ BizHidden @*/
+uint4_t out :: gen_mask1(uint4_t x, int radix, void(4) tweak, int i, void(int) aes_key) =
+begin
+  let void(16) plaintext =
+    reinterpret([record x x pad
+                 ((void(11)) allocate_with_defaults()) tweak rev4_offset(tweak, 8+i)]);
+  let void(16) ciphertext = encrypt_aes_simple(plaintext, aes_key);
+  let uint4_t rnd = reinterpret(reinterpret_as(void(4)[4], ciphertext)[0]);
+  out : : rnd%radix;
+end;
+
+// Encrypt a single-digit of base 'radix' using a locally defined algorithm.
+// The FF3-1 standard does not support encrypting just one digit of base radix.
+// Here we define an encryption algorithm suitable for radix=2*d, where d is
+// coprime to 2.
+/*@ BizHidden @*/
+integer(1) out :: enc1(integer(1) x, void(int) aes_key, void(8) tweak8, int radix = 10) =
+begin
+  let int d = radix/2;
+  let tweak_t tweak = reinterpret(tweak8);
+  let uint4_t left = x%2;
+  let uint4_t right = x%d;
+
+  for (let i, i<4) begin
+
+    let uint4_t mask = gen_mask1(right, 2, tweak.right4, 2*i, aes_key);
+
+    left = (left + mask)%2;
+    mask = gen_mask1(left, d, tweak.left4, 2*i+1, aes_key);
+    right = (right + mask)%d;
+  end;
+
+  out : : (left%2 == right%2) ? right : d+right;
+end;
+
+// Decrypt a single-digit of base 'radix' using a locally defined algorithm.
+/*@ BizHidden @*/
+integer(1)out :: dec1(integer(1) x, void(int) aes_key, void(8) tweak8, int radix = 10) =
+begin
+  let int d = radix/2;
+  let tweak_t tweak = reinterpret(tweak8);
+  let uint4_t left = x%2;
+  let uint4_t right = x%d;
+
+  for (let i, i<4) begin
+    let uint4_t mask = gen_mask1(left, d, tweak.left4, 2*(3-i)+1, aes_key);
+    right = (right + d - mask)%d;
+    mask = gen_mask1(right, 2, tweak.right4, 2*(3-i), aes_key);
+    left = (left + 2 - mask)%2;
+  end;
+
+  out : : (left%2 == right%2) ? right : d+right;
+end;
+
+// wrapped_enc() calls the core enc() routine for FF3-1 where possible. This copes with
+// single digit inputs by calling enc1(), a locally defined algorithm to specifically handle
+// single digit inputs.
+/*@ BizHidden @*/
+integer(1)[int] out :: wrapped_enc(integer(1)[int] plaintext, void(int) key,
+                                   void(8) tweak, int radix) =
+begin
+  // FF3-1 itself cannot encrypt more than this many characters:
+  let int max_input_per_block = get_max_input_len_per_block(radix);
+  let integer(1)[int] ciphertext = allocate_with_defaults();
+  let int plaintext_len = length_of(plaintext);
+  let int num_blocks = ceiling(plaintext_len/(1.0*max_input_per_block));
+
+  // if we can encrypt the characters via one call to FF3-1 then do so
+  if (num_blocks == 1 and plaintext_len>0) begin
+    // FF3-1 itself cannot encrypt 1 character, so we use an alternative
+    // algorithm in that case
+    ciphertext = (plaintext_len>1) ? enc(plaintext, key, tweak, radix)
+                                   : [vector enc1(plaintext[0], key, tweak, radix)];
+  end;
+
+  // If there is more than one block, then make sure the encryption of any block
+  // is dependent on all other blocks in a Feistel fashion of depth one. (The
+  // caller can call this multiple times if they want additional mixing.)
+  if (num_blocks > 1) begin
+
+    // Try to make the last two blocks roughly the same size, and all preceding
+    // blocks maximal.
+    let int n_start = (num_blocks - 2)*max_input_per_block;
+    let int remainder = plaintext_len%max_input_per_block;
+    let int n_penultimate = (remainder==0) ? max_input_per_block :
+                                             ceiling((max_input_per_block + remainder)/2.0);
+
+    // Iterate through the blocks
+    for (let i, i<num_blocks) begin
+      let int n0 = (i==num_blocks-1) ? (n_start+n_penultimate) : (i*max_input_per_block);
+      let int n1 = switch (i)
+        case (num_blocks-1) : plaintext_len;
+	case (num_blocks-2) : n_start+n_penultimate;
+	default: ((i+1)*max_input_per_block);
+      end;
+
+      let integer(1)[int] block = plaintext[n0:n1];
+      let void(8) this_tweak = reinterpret_as(void(8)[4], hash_SHA256((tweak_hash_input_t) [record
+        i i
+        tweak tweak
+	start_of_ciphertext ciphertext
+	end_of_plaintext plaintext[n1:]]))[0];
+
+      ciphertext = vector_concat(ciphertext, enc(block, key, this_tweak, radix));
+    end;
+  end;
+
+  out :: ciphertext;
+end;
+
+
+// wrapped_dec() calls the core dec() routine for FF3-1 where possible. This
+// copes with single digit inputs by calling dec1(), a locally defined algorithm
+// to specifically handle single digit inputs.
+/*@ BizHidden @*/
+integer(1)[int] out :: wrapped_dec(integer(1)[int] ciphertext, void(int) key,
+                                   void(8) tweak, int radix) =
+begin
+  // FF3-1 itself cannot encrypt more than this many characters:
+  let int max_input_per_block = get_max_input_len_per_block(radix);
+  let integer(1)[int] plaintext = allocate_with_defaults();
+  let int ciphertext_len = length_of(ciphertext);
+  let int num_blocks = ceiling(ciphertext_len/(1.0*max_input_per_block));
+
+  // if we can decrypt the characters via one call to FF3-1 then do so
+  if (num_blocks == 1 and ciphertext_len>0) begin
+    // FF3-1 itself cannot encrypt a single character, so we use an alternative
+    // algorithm in that case
+    plaintext = (ciphertext_len>1) ? dec(ciphertext, key, tweak, radix)
+                                   : [vector dec1(ciphertext[0], key, tweak, radix)];
+  end;
+
+  // If there is more than one block, then make sure the encryption of any
+  // block is dependent on all other blocks, in a Feistel fashion of depth one.
+  // The caller can call this multiple times if they want addition mixing.
+  if (num_blocks > 1) begin
+    // Try to make the last two blocks roughly the same size, and all preceding
+    // blocks maximal.
+    let int n_start = (num_blocks - 2)*max_input_per_block;
+    let int remainder = ciphertext_len%max_input_per_block;
+    let int n_penultimate = (remainder==0) ? max_input_per_block
+                                           : ceiling((max_input_per_block + remainder)/2.0);
+
+    // Iterate through the blocks
+    for (let j, j<num_blocks) begin
+      let int i = num_blocks-1-j;
+      let int n0 = (j==0) ? (n_start+n_penultimate) : (i*max_input_per_block);
+
+      let int n1 = switch (j)
+        case 0 : ciphertext_len;
+	case 1 : n_start+n_penultimate;
+	default: ((i+1)*max_input_per_block);
+      end;
+
+      let integer(1)[int] block = ciphertext[n0:n1];
+
+      let void(8) this_tweak = reinterpret_as(void(8)[4],
+                                              hash_SHA256((tweak_hash_input_t) [record
+                                                i i
+                                                tweak tweak
+                                                start_of_ciphertext ciphertext[0:n0]
+                                                end_of_plaintext plaintext]))[0];
+
+      plaintext = vector_concat(dec(block, key, this_tweak, radix), plaintext);
+    end;
+  end;
+
+  out :: plaintext;
+end;
+
+// Table to transform from charset index to 0-based index
+/*@ BizHidden */
+let uint1_t[256] encode_from_table = allocate_with_defaults();
+// Table to transform from 0-based index to target charset index.
+/*@ BizHidden */
+let uint1_t[256] encode_to_table = allocate_with_defaults();
+// Cache off the previously used alphabet, assuming that it will get used more
+// than once.
+/*@ BizHidden */
+let ff3_string_t prev_alphabet = allocate_with_defaults();
+
+// Starting with the user-supplied encryption alphabet, generate the mapping
+// to and from the 0-based index that FF3-1 encryption uses. This code also
+// verifies that the alphabet is provided in monotonically increasing order,
+// which also ensures that it has no duplicates.
+/*@ BizHidden @*/
+int radix :: generate_mapping_tables(ff3_string_t alphabet) =
+begin
+  let int rdx = string_length(alphabet);
+  let uint1_t last_char = (uint1_t)reinterpret(alphabet[0:1], 4);
+
+  // Do not recompute the tables if the alphabet is the same one as previously
+  // used.
+  if (string_compare(alphabet, prev_alphabet) != 0) begin
+    encode_from_table[last_char] = 0;
+    encode_to_table[0] = last_char;
+    for (let i=1, i < rdx) begin
+      let uint1_t this_char = reinterpret(alphabet[i:i+1], 4);
+      if (this_char <= last_char) begin
+        let string(int) msg = "FF3-1 encryption alphabet is not monotonically increasing: " +
+        "alphabet element " + string_representation(i-1) + " has a value of " +
+        string_representation(last_char) +
+        ", which is followed by a value of " + string_representation(this_char) + "\n";
+        force_error(msg);
+      end;
+      encode_from_table[this_char] = i;
+      encode_to_table[i] = this_char;
+      last_char = this_char;
+    end;
+    prev_alphabet = alphabet;
+  end;
+
+  radix :: rdx;
+end;
+
+// Encrypt input data using the FF3-1 format preserving encryption algorithm
+// with the given key, alphabet, and encryption tweak.
+/*@
+  BizCategoryInternalId:DCF_cat_security
+  Arguments: [ { Name:inputstr  BizType:"String"      BizCommentInternalId:DCF_arg_plaintext }
+               { Name:alphabet  BizType:"String"      BizCommentInternalId:DCF_arg_alphabet }
+               { Name:key       BizType:"String"      BizCommentInternalId:DCF_arg_key }
+               { Name:tweak     BizType:"String"      BizCommentInternalId:DCF_arg_tweak }
+             ]
+  BizReturnValueType:"String"
+  BizCommentInternalId:DCF_fun_encrypt
+@*/
+ff3_string_t out :: encrypt(ff3_string_t inputstr, ff3_string_t alphabet,
+                            void(int) key, void(8) tweak = allocate_with_defaults()) =
+begin
+  let int radix = generate_mapping_tables(alphabet);
+  let integer(1)[int] plaintext =
+    reinterpret((ff3_string_t) translate_bytes(inputstr, encode_from_table));
+  let integer(1)[int] ciphertext = wrapped_enc(plaintext, key, tweak, radix);
+  if (char_string(97) != "a")
+    force_error("ff3.encrypt() is supported only when the native character set is iso-8859-1.");
+  out :: translate_bytes(reinterpret_as(ff3_string_t, ciphertext), encode_to_table);
+end;
+
+// Decrypt input data that has been encrypted using the FF3-1 format preserving
+// encryption algorithm, using the given key, alphabet, and encryption tweak.
+/*@
+  BizCategoryInternalId:DCF_cat_security
+  Arguments: [ { Name:inputstr  BizType:"String"      BizCommentInternalId:DCF_arg_ciphertext }
+               { Name:alphabet  BizType:"String"      BizCommentInternalId:DCF_arg_alphabet }
+               { Name:key       BizType:"String"      BizCommentInternalId:DCF_arg_key }
+               { Name:tweak     BizType:"String"      BizCommentInternalId:DCF_arg_tweak }
+             ]
+  BizReturnValueType:"String"
+  BizCommentInternalId:DCF_fun_decrypt
+@*/
+ff3_string_t out :: decrypt(ff3_string_t inputstr, ff3_string_t alphabet,
+                            void(int) key, void(8) tweak = allocate_with_defaults()) =
+begin
+  let int radix = generate_mapping_tables(alphabet);
+  let integer(1)[int] ciphertext =
+    reinterpret((ff3_string_t) translate_bytes(inputstr, encode_from_table));
+  let integer(1)[int] plaintext = wrapped_dec(ciphertext, key, tweak, radix);
+  if (char_string(97) != "a")
+    force_error("ff3.decrypt() is supported only when the native character set is iso-8859-1.");
+  out :: translate_bytes(reinterpret_as(ff3_string_t, plaintext), encode_to_table);
+end;
+
+/*@ BizHidden */
+type fpe_format_t =
+record
+  string(int) format;
+  int has_digits;
+  int has_lowercase;
+  int has_uppercase;
+  int has_other;
+end;
+
+/*@ BizHidden */
+type fpe_tweak_hash_t=
+record
+  int i;
+  void(8) tweak;
+  string(int) format;
+  string(int) payload;
+end;
+
+/*@ BizHidden */
+constant string("") valid_lowercase_chars = "abcdefghijklmnopqrstuvwxyz";
+/*@ BizHidden */
+constant string("") valid_digits = "0123456789";
+
+// Create a string of the same length as the input string that maps numbers to '0',
+// lowercase letters to 'a', uppercase letters to 'A', and leaves any other characters
+// intact. This is used as a template to reconstruct the encrypted or decrypted data in
+// its original format, once the alphabetic and numeric contents of the original string
+// have been encrypted/decrypted.
+/*@ BizHidden */
+fpe_format_t out :: get_format(ff3_string_t input) =
+begin
+  let string(1, charset="iso-8859-1")[int] input_chars = reinterpret(input);
+  let int has_digits = 0;
+  let int has_lowercase = 0;
+  let int has_uppercase = 0;
+  let int has_other = 0;
+
+  let string(int) format = "";
+
+  for (let c in input_chars) begin
+    if (c >= '0' and c <= '9') begin
+      format = format + '0';
+      has_digits = 1;
+    end;
+    else if (c >= 'a' and c <= 'z') begin
+      format = format + 'a';
+      has_lowercase = 1;
+    end;
+    else if (c >= 'A' and c <= 'Z') begin
+      format = format + 'A';
+      has_uppercase = 1;
+    end;
+    else begin
+      has_other = 1;
+      format = format + c;
+    end;
+  end;
+
+  out :: [record format format
+                 has_digits has_digits
+                 has_lowercase has_lowercase
+                 has_uppercase has_uppercase
+                 has_other has_other];
+end;
+
+// Take the separately encrypted or decrypted chars/digits and recombine them in the
+// correct order, along with any non-alphanumeric characters, to create the final
+// encrypted or decrypted string.
+/*@ BizHidden */
+ff3_string_t out :: reconstitute_parts(ff3_string_t format, ff3_string_t chars,
+                                       ff3_string_t digits) =
+begin
+  let string(1, charset="iso-8859-1")[int] format_chars = reinterpret(format);
+  let int chars_index = 0;
+  let int digits_index = 0;
+  let string(1, charset="iso-8859-1")[int] digits_vec = reinterpret(digits);
+  let string(1, charset="iso-8859-1")[int] chars_vec = reinterpret(chars);
+  let string("") str = "";
+
+  for (let c in format_chars) begin
+    if (c == '0') begin
+      str = str + digits_vec[digits_index];
+      digits_index = digits_index + 1;
+    end;
+    else if (c == 'a') begin
+      str = str + chars_vec[chars_index];
+      chars_index = chars_index + 1;
+    end;
+    else if (c == 'A') begin
+      str = str + string_upcase(chars_vec[chars_index]);
+      chars_index = chars_index + 1;
+    end;
+    else
+      str = str + c;
+  end;
+
+  out :: str;
+end;
+
+// Encrypt a string using the FF3-1 encryption algorithm, while preserving certain format
+// characteristics. This function maintains certain characteristics of the input alphabet;
+// digits are encrypted as digits, lowercase letters are encrypted as lowercase letters,
+// and uppercase letters are encrypted as uppercase letters. Other characters are not
+// encrypted. A string encrypted by this function must be decrypted by
+// decrypt_preserving_format.
+/*@
+  BizCategoryInternalId:DCF_cat_security
+  Arguments: [ { Name:inputstr  BizType:"String" BizCommentInternalId:DCF_arg_plaintext }
+               { Name:key       BizType:"String"      BizCommentInternalId:DCF_arg_key }
+               { Name:tweak     BizType:"String"      BizCommentInternalId:DCF_arg_tweak }]
+  BizReturnValueType:"String"
+  BizCommentInternalId:DCF_fun_encrypt_preserving_format
+@*/
+ff3_string_t out :: encrypt_preserving_format(ff3_string_t inputstr,
+                                              void(int) key,
+                                              void(8) tweak = allocate_with_defaults()) =
+begin
+  // Separate out all the alphabetic chars. make all letters lower case.
+  let ff3_string_t chars = string_filter(string_downcase(inputstr), valid_lowercase_chars);
+  // Separate out all the numeric characters
+  let ff3_string_t digits = string_filter(inputstr, valid_digits);
+  // format_info records whether each position in the input was upper case, lower case,
+  // or a digit.
+  let fpe_format_t format_info = get_format(inputstr);
+  let int skip_digit_tweak = (format_info.has_digits == 1 and
+                              format_info.has_lowercase == 0 and
+                              format_info.has_uppercase == 0 and
+                              format_info.has_other == 0);
+  let int skip_lowercase_tweak = (format_info.has_digits == 0 and
+                                  format_info.has_lowercase == 1 and
+                                  format_info.has_uppercase == 0 and
+                                  format_info.has_other == 0);
+  let void(8) local_tweak = tweak;
+
+  if (char_string(97) != "a")
+    force_error("ff3.encrypt_preserving_format() is supported only when the native character set is iso-8859-1.");
+
+  if (length_of(chars)>0) begin
+    local_tweak = (skip_lowercase_tweak) ? tweak :
+                                     reinterpret_as(void(8)[4], hash_SHA256((fpe_tweak_hash_t) [record
+      i 0
+      tweak tweak
+      format format_info.format
+      payload digits]))[0];
+
+    chars = ff3.encrypt(chars, valid_lowercase_chars, key, local_tweak);
+  end;
+
+  if (length_of(digits)>0) begin
+    local_tweak = (skip_digit_tweak) ? tweak :
+                                 reinterpret_as(void(8)[4], hash_SHA256((fpe_tweak_hash_t) [record
+      i 1
+      tweak tweak
+      format format_info.format
+      payload chars]))[0];
+
+    digits = ff3.encrypt(digits, valid_digits, key, local_tweak);
+  end;
+
+  out :: reconstitute_parts(format_info.format, chars, digits);
+end;
+
+// Decrypt a string encrypted using encrypt_preserving_format.
+/*@
+  BizCategoryInternalId:DCF_cat_security
+  Arguments: [ { Name:inputstr  BizType:"String"      BizCommentInternalId:DCF_arg_ciphertext }
+               { Name:key       BizType:"String"      BizCommentInternalId:DCF_arg_key }
+               { Name:tweak     BizType:"String"      BizCommentInternalId:DCF_arg_tweak }]
+  BizReturnValueType:"String"
+  BizCommentInternalId:DCF_fun_decrypt_preserving_format
+@*/
+ff3_string_t out :: decrypt_preserving_format(ff3_string_t inputstr,
+                                              void(int) key,
+                                              void(8) tweak = allocate_with_defaults()) =
+
+begin
+  let ff3_string_t chars = string_filter(string_downcase(inputstr), valid_lowercase_chars);
+  let ff3_string_t digits = string_filter(inputstr, valid_digits);
+  let fpe_format_t format_info = get_format(inputstr);
+  let int skip_digit_tweak = (format_info.has_digits == 1 and
+                              format_info.has_lowercase == 0 and
+                              format_info.has_uppercase == 0 and
+                              format_info.has_other == 0);
+  let int skip_lowercase_tweak = (format_info.has_digits == 0 and
+                                  format_info.has_lowercase == 1 and
+                                  format_info.has_uppercase == 0 and
+                                  format_info.has_other == 0);
+  let void(8) local_tweak = tweak;
+
+  if (char_string(97) != "a")
+    force_error("ff3.decrypt_preserving_format() is supported only when the native character set is iso-8859-1.");
+
+  if (length_of(digits)>0) begin
+    local_tweak = (skip_digit_tweak) ? tweak :
+                                 reinterpret_as(void(8)[4], hash_SHA256((fpe_tweak_hash_t) [record
+      i 1
+      tweak tweak
+      format format_info.format
+      payload chars]))[0];
+
+    digits = ff3.decrypt(digits, valid_digits, key, local_tweak);
+  end;
+
+  if (length_of(chars)>0) begin
+    local_tweak = (skip_lowercase_tweak) ? tweak :
+                                     reinterpret_as(void(8)[4], hash_SHA256((fpe_tweak_hash_t) [record
+      i 0
+      tweak tweak
+      format format_info.format
+      payload digits]))[0];
+
+    chars = ff3.decrypt(chars, valid_lowercase_chars, key, local_tweak);
+  end;
+
+  out :: reconstitute_parts(format_info.format, chars, digits);
+end;
