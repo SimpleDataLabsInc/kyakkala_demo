@@ -141,3 +141,9 @@ https://github.com/SimpleDataLabsInc/transpiler-optum.git
     "source_table" : "",
     "target_table" : ""
 }
+-------
+  val key = "6F6826F7F791E1A8EE7E1BD7717D3ED"
+  val tweak = "CBD09280979564"
+  val alphabet = FF3Cipher.DIGITS+FF3Cipher.ASCII_UPPERCASE+FF3Cipher.ASCII_LOWERCASE
+  val ff3 = new FF3Cipher(key, tweak, alphabet)
+  println(ff3.encrypt("23422342"))
