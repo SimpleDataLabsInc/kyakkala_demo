@@ -11,7 +11,7 @@ https://github.com/SimpleDataLabsInc/transpiler-optum.git
   "source_table": "",
   "target_table": "d_member_adjustment",
   "sk_service_col": "mad_sk",
-  "read_incremental_files_flag": "false",
+  "read_incremental`_files_flag": "false",
   "optional_sk_config": "sks=[\n  {\n    \"table-name\": \"d_cag\",\n    \"sk-col\": \"cag_sk\",\n    \"nk-col\": [\n      \"i5aacd\",\n      \"i5accd\",\n      \"i5adcd\"\n    ]\n  },\n  {\n    \"table-name\": \"d_carrier\",\n    \"sk-col\": \"carrier_sk\",\n    \"nk-col\": [\n      \"i5aacd\"\n    ]\n  },\n  {\n    \"table-name\": \"d_member\",\n    \"sk-col\": \"mbr_sk\",\n    \"nk-col\": [\n      \"i5aacd\",\n      \"i5accd\",\n      \"i5adcd\",\n      \"i5abcd\"\n    ]\n  }\n]"
 }
 -----------------ctrx_d_member_adjustment-------------------
@@ -77,14 +77,13 @@ https://github.com/SimpleDataLabsInc/transpiler-optum.git
 -----------------ctrx_l_formulary_client_xref-------------------
 {
   "final_table_schema": "{\"client_xref_sk\": \"long\", \"client_id\": \"string\", \"client_desc\": \"string\", \"src_env_sk\": \"long\", \"rec_stat_cd\": \"short\", \"run_id\": \"long\", \"update_uid\": \"string\", \"update_ts\": \"timestamp\", \"insert_uid\": \"string\", \"insert_ts\": \"timestamp\"}",
-  "pipeline_name": "ctrx_l_formulary_client_xref",
+  "pipeline_name": "l_formulary_client_xref",
   "primary_key": "client_id",
   "reformat_rules": "{\n  \"client_id\" : \"client_id\",\n  \"src_env_sk\" : \"CAST(dxf_src_sys_id AS DECIMAL(38,0))\",\n  \"client_desc\" : \"'-'\",\n  \"client_xref_sk\" : \"-1\"\n}",
   "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
   "source_table": "",
   "target_table": "l_formulary_client_xref",
-  "sk_service_col": "client_xref_sk",
-  "read_incremental_files_flag": "false"
+  "sk_service_col": "client_xref_sk"
 }
 -----------------d_reporting_client_map-------------------
 {
@@ -147,3 +146,8 @@ https://github.com/SimpleDataLabsInc/transpiler-optum.git
   val alphabet = FF3Cipher.DIGITS+FF3Cipher.ASCII_UPPERCASE+FF3Cipher.ASCII_LOWERCASE
   val ff3 = new FF3Cipher(key, tweak, alphabet)
   println(ff3.encrypt("23422342"))
+
+  ---
+
+
+  CASE WHEN src_env_sk IN (480, 490) THEN ((((NOT (carrierid IS NULL)) AND ((NOT CAST(string_like(CAST(upper(carrierid) AS STRING), '%TEST%') AS BOOLEAN)) AND (NOT CAST(string_like(CAST(upper(carrierid) AS STRING), '%TST%') AS BOOLEAN)))) AND ((NOT array_contains(array('1718634', '0556540', '1497704431', '1669498515'), srvprovid)) OR (CAST(rxnumber AS DOUBLE) >= 10000))) OR (carrierid IS NULL)) AND (claim_match_ind = 'Y') ELSE ((NOT (carrierid IS NULL)) AND (((CAST(rccesp_lkp_match0 AS BOOLEAN) AND (coalesce(niiyc31, ' ') = 'Y')) OR ((NOT CAST(rccesp_lkp_match0 AS BOOLEAN)) AND (CAST(rccesp_lkp_match2 AS BOOLEAN) AND (coalesce(niiyc33, ' ') = 'Y')))) OR ((niiyc34 IS NULL) AND (coalesce(niiyc35, ' ') = 'Y')))) AND (claim_match_ind = 'Y') END
