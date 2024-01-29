@@ -151,3 +151,331 @@ https://github.com/SimpleDataLabsInc/transpiler-optum.git
 
 
   CASE WHEN src_env_sk IN (480, 490) THEN ((((NOT (carrierid IS NULL)) AND ((NOT CAST(string_like(CAST(upper(carrierid) AS STRING), '%TEST%') AS BOOLEAN)) AND (NOT CAST(string_like(CAST(upper(carrierid) AS STRING), '%TST%') AS BOOLEAN)))) AND ((NOT array_contains(array('1718634', '0556540', '1497704431', '1669498515'), srvprovid)) OR (CAST(rxnumber AS DOUBLE) >= 10000))) OR (carrierid IS NULL)) AND (claim_match_ind = 'Y') ELSE ((NOT (carrierid IS NULL)) AND (((CAST(rccesp_lkp_match0 AS BOOLEAN) AND (coalesce(niiyc31, ' ') = 'Y')) OR ((NOT CAST(rccesp_lkp_match0 AS BOOLEAN)) AND (CAST(rccesp_lkp_match2 AS BOOLEAN) AND (coalesce(niiyc33, ' ') = 'Y')))) OR ((niiyc34 IS NULL) AND (coalesce(niiyc35, ' ') = 'Y')))) AND (claim_match_ind = 'Y') END
+  -----
+  joins = [
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_cag",
+         "join-cond": "in1.carrier_id = in0.asaacd AND in1.account_id = in0.asaccd AND in1.employer_group_id = in0.asadcd",
+         "val-cols": [
+           "in1.f_pde_hist_cag as in1_f_pde_hist_cag"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT) AND in1.cal_start_dt = date_check(CAST(asbbda AS DECIMAL(10,0)))",
+         "val-cols": [
+           "in1.cal_start_dt AS cal_start_dt0",
+           "in1.prod_directory_dt_sk AS prod_directory_dt_sk0",
+           "in1.cal_end_dt AS cal_end_dt0"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT) AND in1.cal_start_dt = date_format(to_date(date_check(CAST(asbbda AS DECIMAL(10,0))), 'yyyyMMdd'), 'yyyyMMdd')",
+         "val-cols": [
+           "in1.cal_end_dt AS cal_end_dt1",
+           "in1.prod_directory_dt AS prod_directory_dt1",
+           "in1.prod_directory_dt_sk AS prod_directory_dt_sk1"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_cal_sub",
+         "join-cond": "in1.cal_start_dt = date_check(cal_start_dt0) AND in1.cal_end_dt = date_check(cal_end_dt1) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS DECIMAL(38,0))",
+         "val-cols": [
+           "in1.f_pde_hist_cal_sub as in1_f_pde_hist_cal_sub"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.ids_common/lookup.ids_common.d_pharmacy.dat",
+         "join-cond": "in1.phr_id = trim(in0.asythe)",
+         "val-cols": [
+           "in1.phr_npi_no AS phr_npi_no2",
+           "in1.phr_sk AS phr_sk2"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.cms_contract_id = trim(in0.asvwhc) AND in1.cms_pbp_id = trim(in0.asvyhc) AND in1.cms_phr_npi_id = str_non_nk(CASE WHEN (trim(asn5ia) = '01') THEN str_non_nk(asythe) ELSE CASE WHEN (NOT (trim(asn5ia) = '01')) THEN phr_npi_no2 END END) AND in1.prod_directory_dt_sk = prod_directory_dt_sk0",
+         "val-cols": [
+           "in1.cms_segment_id AS cms_segment_id3",
+           "in1.price_id AS price_id3",
+           "in1.phr_mail_flg AS phr_mail_flg3"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_cost",
+         "join-cond": "in1.cms_contract_id = str_non_nk(asvwhc) AND in1.cms_pbp_id = str_non_nk(asvyhc) AND in1.cms_segment_id = str_non_nk(cms_segment_id3) AND in1.cms_phr_npi_id = str_non_nk(CASE WHEN (trim(asn5ia) = '01') THEN str_non_nk(asythe) ELSE CASE WHEN (NOT (trim(asn5ia) = '01')) THEN phr_npi_no2 END END) AND in1.prod_directory_dt = date_check(prod_directory_dt1)",
+         "val-cols": [
+           "in1.f_pde_hist_cost as in1_f_pde_hist_cost"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_mbr",
+         "join-cond": "in1.carrier_id = in0.asaacd AND in1.account_id = in0.asaccd AND in1.employer_group_id = in0.asadcd AND in1.mbr_id = in0.asabcd",
+         "val-cols": [
+           "in1.f_pde_hist_mbr as in1_f_pde_hist_mbr"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.cms_contract_id = trim(in0.asvwhc) AND in1.cms_pbp_id = trim(in0.asvyhc) AND in1.cms_phr_npi_id = str_non_nk(CASE WHEN (trim(asn5ia) = '01') THEN str_non_nk(asythe) ELSE CASE WHEN (NOT (trim(asn5ia) = '01')) THEN phr_npi_no2 END END) AND in1.prod_directory_dt_sk = prod_directory_dt_sk1",
+         "val-cols": [
+           "in1.price_id AS price_id4",
+           "in1.phr_mail_flg AS phr_mail_flg4",
+           "in1.cms_segment_id AS cms_segment_id4",
+           "in1.preferred_status_mail_flg AS preferred_status_mail_flg4",
+           "in1.phr_retail_flg AS phr_retail_flg4",
+           "in1.phr_la_drugs_flg AS phr_la_drugs_flg4",
+           "in1.phr_hi_flg AS phr_hi_flg4",
+           "in1.phr_ltc_flg AS phr_ltc_flg4",
+           "in1.preferred_status_retail_flg AS preferred_status_retail_flg4"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.ids_rxclaim/lookup.ids_rxclaim.d_cms_prxy_ndc_rxcui.dat",
+         "join-cond": "in1.prod_id = trim(in0.asric4) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT) AND in1.efft_dt = date_format(to_date(CAST(in0.asbbda AS STRING), 'yyyyMMdd'), 'yyyyMMdd')",
+         "val-cols": [
+           "in1.rxcui AS rxcui5",
+           "in1.prod_lbl AS prod_lbl5",
+           "in1.gpi_id AS gpi_id5"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.ids_rxclaim/lookup.ids_rxclaim.d_cms_prxy_ndc_rxcui_prod_id.dat",
+         "join-cond": "in1.rxcui = rxcui5 AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT) AND in1.efft_dt = date_format(to_date(CAST(in0.asbbda AS STRING), 'yyyyMMdd'), 'yyyyMMdd')",
+         "val-cols": [
+           "in1.prod_id AS prod_id6"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_prc_file",
+         "join-cond": "in1.cms_contract_id = str_non_nk(asvwhc) AND in1.price_id = str_non_nk(price_id4) AND in1.cms_proxy_ndc_id = str_non_nk(prod_id6) AND in1.days_of_supply = CAST(CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 28) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 34)) THEN 30 WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 60) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 62)) THEN 60 ELSE CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 90) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 93)) THEN 90 END END AS DECIMAL(38,0)) AND in1.pricing_file_mail_flg = str_non_nk(phr_mail_flg4) AND in1.prod_directory_dt = date_check(prod_directory_dt1)",
+         "val-cols": [
+           "in1.f_pde_hist_prc_file as in1_f_pde_hist_prc_file"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_prd",
+         "join-cond": "in1.prod_id = in0.asric4 AND in1.prod_id_qlfr_cd = '03'",
+         "val-cols": [
+           "in1.f_pde_hist_prd as in1_f_pde_hist_prd"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.ids_rxclaim/lookup.ids_rxclaim.d_cms_prxy_ndc_rxcui.dat",
+         "join-cond": "in1.prod_id = in0.asric4 AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT) AND in1.efft_dt = CAST(in0.asbbda AS STRING)",
+         "val-cols": [
+           "in1.rxcui AS rxcui7",
+           "in1.ext_ovrd_id AS ext_ovrd_id7",
+           "in1.efft_dt AS efft_dt7",
+           "in1.rxcui_type_cd AS rxcui_type_cd7"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "orx_idw_dm_prd.unknown_f_pde_hist_prxy_ndc",
+         "join-cond": "in1.prod_id = trim(in0.asric4) AND in1.rxcui = CAST(rxcui7 AS DECIMAL(38,0)) AND in1.active_ind = 'Y' AND in1.mpd_ind = 'Y' AND in1.ext_ovrd_id = ext_ovrd_id7 AND in1.efft_dt = efft_dt7 AND in1.rxcui_type_cd = rxcui_type_cd7 AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS DECIMAL(38,0))",
+         "val-cols": [
+           "in1.f_pde_hist_prxy_ndc as in1_f_pde_hist_prxy_ndc"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_common.d_cag",
+         "join-cond": "in1.carrier_id = in0.asaacd AND in1.account_id = in0.asaccd AND in1.employer_group_id = in0.asadcd",
+         "val-cols": [
+           "in1.cag_sk as in1_cag_sk"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_rxclaim.d_cms_stars_calendar_submission",
+         "join-cond": "in1.cal_start_dt = date_check(cal_start_dt0) AND in1.cal_end_dt = date_check(cal_end_dt1) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS DECIMAL(38,0))",
+         "val-cols": [
+           "in1.cms_stars_calendar_submission_sk as in1_cms_stars_calendar_submission_sk"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_rxclaim.d_cms_pharmacy_cost",
+         "join-cond": "in1.cms_contract_id = str_non_nk(asvwhc) AND in1.cms_pbp_id = str_non_nk(asvyhc) AND in1.cms_segment_id = str_non_nk(cms_segment_id4) AND in1.cms_phr_npi_id = str_non_nk(CASE WHEN (trim(asn5ia) = '01') THEN str_non_nk(asythe) ELSE CASE WHEN (NOT (trim(asn5ia) = '01')) THEN phr_npi_no2 END END) AND in1.prod_directory_dt = date_check(prod_directory_dt1)",
+         "val-cols": [
+           "in1.cms_pharmacy_cost_sk as in1_cms_pharmacy_cost_sk"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_common.d_member",
+         "join-cond": "in1.carrier_id = in0.asaacd AND in1.account_id = in0.asaccd AND in1.employer_group_id = in0.asadcd AND in1.mbr_id = in0.asabcd",
+         "val-cols": [
+           "in1.mbr_sk as in1_mbr_sk"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_rxclaim.d_cms_drug_pricing_file",
+         "join-cond": "in1.cms_contract_id = str_non_nk(asvwhc) AND in1.price_id = str_non_nk(price_id4) AND in1.cms_proxy_ndc_id = str_non_nk(prod_id6) AND in1.days_of_supply = CAST(CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 28) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 34)) THEN 30 WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 60) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 62)) THEN 60 ELSE CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 90) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 93)) THEN 90 END END AS DECIMAL(38,0)) AND in1.pricing_file_mail_flg = str_non_nk(phr_mail_flg4) AND in1.prod_directory_dt = date_check(prod_directory_dt1)",
+         "val-cols": [
+           "in1.cms_drug_pricing_file_sk as in1_cms_drug_pricing_file_sk"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_common.d_product",
+         "join-cond": "in1.prod_id = trim(in0.asric4) AND in1.prod_id_qlfr_cd = '03'",
+         "val-cols": [
+           "in1.prod_sk as in1_prod_sk"
+         ]
+      },
+      {
+         "fmt": "table",
+         "src": "ids_rxclaim.d_cms_prxy_ndc_rxcui",
+         "join-cond": "in1.prod_id = trim(in0.asric4) AND in1.rxcui = CAST(rxcui7 AS DECIMAL(38,0)) AND in1.active_ind = 'Y' AND in1.mpd_ind = 'Y' AND in1.ext_ovrd_id = ext_ovrd_id7 AND in1.efft_dt = efft_dt7 AND in1.rxcui_type_cd = rxcui_type_cd7 AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS DECIMAL(38,0))",
+         "val-cols": [
+           "in1.cms_proxy_ndc_rxcui_sk as in1_cms_proxy_ndc_rxcui_sk"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.ids_rxclaim/lookup.ids_rxclaim.d_cms_prxy_ndc_rxcui.dat",
+         "join-cond": "in1.prod_id = trim(str_non_nk(prod_id6)) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT) AND in1.efft_dt = CAST(in0.asbbda AS STRING)",
+         "val-cols": [
+           "in1.prod_lbl AS prod_lbl8"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.ids_rxclaim/lookup.ids_rxclaim.l_residence.dat",
+         "join-cond": "in1.residence_cd = str_non_nk(asaxod)",
+         "val-cols": [
+           "in1.residence_cd_desc AS residence_cd_desc9"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.rxclaim_ctrx/lookup.rxclaim_ctrx.rcmdhp.dat",
+         "join-cond": "in1.aqpwih = in0.aspwih",
+         "val-cols": [
+           "in1.aqc2dt AS aqc2dt10",
+           "in1.aqadtm AS aqadtm10",
+           "in1.aqnfce AS aqnfce10",
+           "in1.aqbqtz AS aqbqtz10",
+           "in1.aqo1hg AS aqo1hg10",
+           "in1.aqo2hg AS aqo2hg10",
+           "in1.aqveh9 AS aqveh910",
+           "in1.aqf1hf AS aqf1hf10",
+           "in1.aqeyai AS aqeyai10",
+           "in1.aqfuhs AS aqfuhs10",
+           "in1.aqfvhs AS aqfvhs10",
+           "in1.aqadht AS aqadht10",
+           "in1.aqfwhs AS aqfwhs10",
+           "in1.aqakvn AS aqakvn10",
+           "in1.aqalvn AS aqalvn10",
+           "in1.aqadvn AS aqadvn10",
+           "in1.aqbmdt AS aqbmdt10",
+           "in1.aqabtm AS aqabtm10",
+           "in1.aqaevn AS aqaevn10"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.cms_contract_id = trim(in0.asvwhc) AND in1.price_id = price_id3 AND in1.cms_proxy_ndc_id = trim(str_non_nk(prod_id6)) AND in1.days_of_supply = CAST(CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 28) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 34)) THEN 30 WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 60) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 62)) THEN 60 ELSE CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 90) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 93)) THEN 90 END END AS DECIMAL(38,0)) AND in1.pricing_file_mail_flg = phr_mail_flg3 AND in1.prod_directory_dt_sk = prod_directory_dt_sk0",
+         "val-cols": [
+           "in1.unit_cost AS unit_cost11"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.e0p2nb = CAST(in0.asp2nb AS DECIMAL(17,0)) AND in1.e0oinb = CAST(in0.asoinb AS DECIMAL(5,0)) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT)",
+         "val-cols": [
+           "in1.e0uicd AS e0uicd12"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.dnp2nb = CAST(in0.asp2nb AS DECIMAL(17,0)) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT)",
+         "val-cols": [
+           "in1.dnkust AS dnkust13"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.rip2nb = CAST(in0.asp2nb AS DECIMAL(17,0)) AND in1.rioinb = CAST(in0.asoinb AS DECIMAL(5,0)) AND in1.src_env_sk = CAST(in0.dxf_src_sys_id AS INT)",
+         "val-cols": [
+           "in1.riawod AS riawod14"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.prod_id = trim(in0.asric4)",
+         "val-cols": [
+           "in1.package_size_uom_cd AS package_size_uom_cd15"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.prod_id = trim(str_non_nk(prod_id6))",
+         "val-cols": [
+           "in1.package_size_uom_cd AS package_size_uom_cd16",
+           "in1.drg_ndc_term_dt AS drg_ndc_term_dt16"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.cms_contract_id = in0.asvwhc AND in1.cms_pbp_id = in0.asvyhc AND in1.cms_phr_npi_id = str_non_nk(CASE WHEN (trim(asn5ia) = '01') THEN str_non_nk(asythe) ELSE CASE WHEN (NOT (trim(asn5ia) = '01')) THEN phr_npi_no2 END END) AND in1.prod_directory_dt_sk = prod_directory_dt_sk0",
+         "val-cols": [
+           "in1.brand_dispensing_fee_30 AS brand_dispensing_fee_3017",
+           "in1.generic_dispensing_fee_30 AS generic_dispensing_fee_3017",
+           "in1.brand_dispensing_fee_60 AS brand_dispensing_fee_6017",
+           "in1.generic_dispensing_fee_60 AS generic_dispensing_fee_6017",
+           "in1.brand_dispensing_fee_90 AS brand_dispensing_fee_9017",
+           "in1.generic_dispensing_fee_90 AS generic_dispensing_fee_9017"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.cms_contract_id = trim(in0.asvwhc) AND in1.price_id = price_id4 AND in1.cms_proxy_ndc_id = trim(str_non_nk(prod_id6)) AND in1.days_of_supply = CAST(CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 28) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 34)) THEN 30 WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 60) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 62)) THEN 60 ELSE CASE WHEN ((CAST(in0.asimnb AS DECIMAL(5,0)) >= 90) AND (CAST(in0.asimnb AS DECIMAL(5,0)) <= 93)) THEN 90 END END AS DECIMAL(38,0)) AND in1.pricing_file_mail_flg = phr_mail_flg4 AND in1.prod_directory_dt_sk = prod_directory_dt_sk1",
+         "val-cols": [
+           "in1.pricing_file_mail_flg AS pricing_file_mail_flg18"
+         ]
+      },
+      {
+         "fmt": "delta",
+         "src": "/path",
+         "join-cond": "in1.cms_contract_id = in0.asvwhc AND in1.cms_pbp_id = in0.asvyhc AND in1.cms_phr_npi_id = str_non_nk(CASE WHEN (trim(asn5ia) = '01') THEN str_non_nk(asythe) ELSE CASE WHEN (NOT (trim(asn5ia) = '01')) THEN phr_npi_no2 END END) AND in1.prod_directory_dt_sk = prod_directory_dt_sk1",
+         "val-cols": [
+           "in1.floor_price AS floor_price19"
+         ]
+      },
+      {
+         "fmt": "csv",
+         "src": "/{AI_SERIAL_LOOKUP}/lookup.rxclaim_ctrx/lookup.rxclaim_ctrx.rcmdhp.dat",
+         "join-cond": "in1.aqpwih = trim(in0.aspwih)",
+         "val-cols": [
+           "in1.aqp3ih AS aqp3ih20"
+         ]
+      }
+  ]
+
