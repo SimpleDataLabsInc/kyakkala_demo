@@ -1,0 +1,2 @@
+input: abc, key: 6F6826F7F791E1A8EE7E1BD7717D3EDD, tweak: CBD09280979564
+output of enc::plaintext_digits -> Line:417
