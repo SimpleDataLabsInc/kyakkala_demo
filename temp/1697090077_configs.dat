@@ -25,7 +25,7 @@
   "source_path": "srcs = [{\n    \"fmt\" : \"query\",\n    \"src\" : \"\"\n}]",
   "source_table": "",
   "target_table": "f_formulary_claim_xrfe",
-  "encrypt_cols": "mb_first_nm,mb_last_nm,patient_first_nm,patient_last_nm",
+  "encrypt_cols": "mb_first_nm,mb_last_nm,patient_first_Fnm,patient_last_nm",
   "encrypt_scope": "idwshared-dbscope",
   "read_incremental_files_flag": "false",
   "sk_service_self_join": "false",

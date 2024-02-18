@@ -16,10 +16,10 @@ val (sbm_dt, sbm_dt_end, catchup_month, catchup_year, src_env_sk_filter) =
         )
     } else if(readProcessFileTry.failed.get.getLocalizedMessage contains "Path does not exist") {
         (
-            LocalDate.now().minusMonths(1).withDayOfMonth(1).toString
-            LocalDate.now().withDayOfMonth(1).toString
-            Config.sbm_dt.substring(5, 7)
-            Config.sbm_dt.substring(0, 4)
+            LocalDate.now().minusMonths(1).withDayOfMonth(1).toString,
+            LocalDate.now().withDayOfMonth(1).toString,
+            Config.sbm_dt.substring(5, 7),
+            Config.sbm_dt.substring(0, 4),
             "520"
         )
     } else throw readProcessFileTry.failed.get

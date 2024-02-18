@@ -1,0 +1,475 @@
+-------------------------------------FF3 FPE
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.encrypt_preserving_format("D",(void(16)) string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"),(void(8))"\xCB\xD0\x92\x80\x97\x95\x64")'
+"G"
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.get_format("D")'
+[record
+  format        "A"
+  has_digits    0
+  has_lowercase 0
+  has_uppercase 1
+  has_other     0]
+
+>>>>chars
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'string_filter(string_downcase("D"), ff3.valid_lowercase_chars)'
+"d"
+
+>>>>digits
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'string_filter(string_downcase("D"), ff3.valid_digits)'
+""
+
+>>>>chars Encrypt Tweak
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'reinterpret_as(void(8)[4], hash_SHA256((ff3.fpe_tweak_hash_t) [record i 0 tweak "\xCB\xD0\x92\x80\x97\x95\x64" format "A" payload ""]))[0]'
+[void 0x1a 0xdf 0x88 0xad 0xcf 0xa1 0x0c 0x59]
+
+
+>>>>Encrypt
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.encrypt("d", ff3.valid_lowercase_chars, (void(16)) string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"), reinterpret_as(void(8)[4], hash_SHA256((ff3.fpe_tweak_hash_t) [record i 0 tweak "\xCB\xD0\x92\x80\x97\x95\x64" format "A" payload ""]))[0])'
+"g"
+
+>>>>Inside Encrypt -- Breakdown
+>>radix
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.generate_mapping_tables(ff3.valid_lowercase_chars)'
+26
+
+>>plaintext
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)); end'
+[vector
+  3]
+
+>>New Tweak "\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59"
+>>ciphertext
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.wrapped_enc((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)), (void(16)) string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"), "\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59", radix); end'
+[vector
+  6]
+
+>>encrypt function return
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (ff3.ff3_string_t) translate_bytes(reinterpret_as(ff3.ff3_string_t, (integer(1)[int]) ff3.wrapped_enc((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)), (void(16)) string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"), "\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59", radix)), ff3.encode_to_table); end'
+"g"
+
+>>>>Inside wrapped_enc -- breakdown
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.get_max_input_len_per_block(26)'
+40
+
+>>plaintext_len
+ssriva40@apvrp70062:/home/ssriva40
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: length_of(((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)))); end'
+1
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ceiling(1/(1.0*ff3.get_max_input_len_per_block(26)))'
+"1."
+
+>>enc1 call to get Ciphertext
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: [vector ff3.enc1(((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)))[0], (void(16)) string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"), "\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59", radix)]; end'
+[vector
+  6]
+
+>>rebuild from enc1 function(wrapped_enc) return
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: translate_bytes(reinterpret_as(ff3.ff3_string_t, (integer(1)[int])[vector 6]), ff3.encode_to_table); end'
+"g"
+
+
+>>>>Inside enc1 -- breakdown
+>>left
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (ff3.uint4_t)((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)))[0]%2; end'
+1
+
+>>right
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (ff3.uint4_t)((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)))[0]%13; end'
+3
+
+>>tweak  
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")'
+[record
+  left4  [void 0x1a 0xdf 0x88 0xad]
+  right4 [void 0xcf 0xa1 0x0c 0x59]]
+
+>>i=0, left=1, right=3, d=13
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(3, 2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 2*0, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+0 --> mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(1+0)%2'
+1 --> new left
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(1, radix/2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).left4, 2*0+1, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+1 --> new mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(3+1)%13'
+4 --> new right
+
+
+>>i=1, left=1, right=4, d=13
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(4, 2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 2*1, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+1 --> mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(1+1)%2'
+0 --> new left
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(0, radix/2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).left4, 2*1+1, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+6 --> new mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(4+6)%13'
+10 --> new right
+
+
+>>i=2, left=0, right=10, d=13
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(10, 2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 2*2, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+1 --> mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(0+1)%2'
+1 --> new left
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(1, radix/2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).left4, 2*2+1, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+12 --> new mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(10+12)%13'
+9 --> new right
+
+
+>>i=3, left=1, right=9, d=13
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(9, 2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 2*3, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+1 --> mask
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(1+1)%2'
+0 --> new left
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.gen_mask1(0, radix/2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).left4, 2*3+1, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+10 --> new mask
+
+
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(9+10)%13'
+6 --> new right
+
+$ m_eval '(0%2 == 6%2) ? 6 : 13+6'
+6  ---> This gets converted to "g" as shown on line #47
+
+
+>>>>Inside gen_mask1(uint4_t x, int radix, void(4) tweak, int i, void(int) aes_key)
+  let void(16) plaintext =
+    reinterpret([record x x pad
+                 ((void(11)) allocate_with_defaults()) tweak rev4_offset(tweak, 8+i)]);
+  let void(16) ciphertext = encrypt_aes_simple(plaintext, aes_key);
+  let uint4_t rnd = reinterpret(reinterpret_as(void(4)[4], ciphertext)[0]);
+  out : : rnd%radix;
+>>Itr-1: ff3.gen_mask1(3, 2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 2*0, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"))
+
+>>rev4_offset: Itr1 x=3, i=2*0
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.rev4_offset(((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 8+2*0)'
+[void 0x51 0x0c 0xa1 0xcf]
+
+>>plaintext: i=0, left=1, right=3, d=13; x=3, i-->2*0, radix=2
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (void(23)) reinterpret([record x (ff3.uint4_t)(((integer(1)[int]) reinterpret((ff3.ff3_string_t) translate_bytes("d", ff3.encode_from_table)))[0])%13 pad ((void(11)) allocate_with_defaults()) tweak (void(4))ff3.rev4_offset(((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).right4, 8+2*0)]); end'
+[void 0x03 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x51 0x0c 0xa1 0xcf]
+
+[void 0x03 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x51 0x0c 0xa1 0xcf]
+				 
+>>ciphertext: x=3
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'encrypt_aes_simple([void 0x03 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x51 0x0c 0xa1 0xcf], (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"))'
+[void 0x84 0x55 0xa3 0x45 0x2b 0x03 0xd9 0x22 0x00 0x5d 0x1b 0x1f 0x74 0x51 0x6e 0xd6]
+
+>>rnd
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(ff3.uint4_t)reinterpret(reinterpret_as(void(4)[4], (void(16)) [void 0x84 0x55 0xa3 0x45 0x2b 0x03 0xd9 0x22 0x00 0x5d 0x1b 0x1f 0x74 0x51 0x6e 0xd6])[0])'
+1168332164
+
+>>function return: rnd%radix
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(ff3.uint4_t) (1168332164%2)'
+0 -- matches line #89
+
+
+>>Itr-4(Last) ff3.gen_mask1(0, radix/2, ((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).left4, 2*3+1, (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD"))
+
+>>rev4_offset: Itr-4 x=0, i=2*3+1
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'ff3.rev4_offset(((ff3.tweak_t)reinterpret((void(8))"\x1A\xDF\x88\xAD\xCF\xA1\x0C\x59")).left4, 8+2*3+1)'
+[void 0xa2 0x88 0xdf 0x1a]
+
+>>plaintext: i=3, left=1, right=9, d=13; x=0, i=2*3+1
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (void(16))reinterpret([record x (ff3.uint4_t)0 pad ((void(11)) allocate_with_defaults()) tweak [void 0xa2 0x88 0xdf 0x1a]]); end'
+[void 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0xa2 0x88 0xdf 0x1a]
+
+>>ciphertext: x=0
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: (void(16)) encrypt_aes_simple((void(16))[void 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0xa2 0x88 0xdf 0x1a], (void(int))string_from_hex("6F6826F7F791E1A8EE7E1BD7717D3EDD")); end'
+[void 0x82 0xfa 0xea 0xc9 0x5c 0x84 0x0b 0xfb 0xb1 0x87 0x9c 0x33 0xff 0x49 0xaf 0x9a]
+
+>>rnd
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(ff3.uint4_t)reinterpret(reinterpret_as(void(4)[4], (void(16)) [void 0x82 0xfa 0xea 0xc9 0x5c 0x84 0x0b 0xfb 0xb1 0x87 0x9c 0x33 0xff 0x49 0xaf 0x9a])[0])'
+3387619970
+
+>>function return: rnd%radix
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr '(ff3.uint4_t) (3387619970%13)'
+7 --> not matching should be 10 as per line #137
+
+
+>>>>Inside rev4_offset(void(4) in, int i) --> reinterpret((unsigned little endian integer(4)) ((reinterpret_as(unsigned big endian integer(4), in))^i))
+			[record
+			  left4  [void 0x1a 0xdf 0x88 0xad]
+			  right4 [void 0xcf 0xa1 0x0c 0x59]]
+$ m_eval 'reinterpret_as(unsigned big endian integer(4), [void 0x1a 0xdf 0x88 0xad])'
+450857133
+
+$ m_eval '450857133^8+2*3+1'
+450857122
+
+$ m_eval '(void(4))reinterpret((unsigned little endian integer(4)) 450857122)'
+[void 0xa2 0x88 0xdf 0x1a]
+[void 0xa2 0x88 0xdf 0x1a] --> copied from above line #182 for compare
+
+
+>>>>Encoding table for lowercase
+$ m_eval -include /etl/apps/prod/rxclaim/sand/aicoe/pub_dxf_4_0/xfr/ff3_idw_encrypt.xfr 'begin let int radix = ff3.generate_mapping_tables(ff3.valid_lowercase_chars); result :: ff3.encode_from_table; end'
+[vector
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0]
